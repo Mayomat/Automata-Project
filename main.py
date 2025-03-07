@@ -75,6 +75,43 @@ class Automata:
             print()
 
 
+    def is_complete(self, nb_row, nb_col):
+        # function to detect if the automata is complete or not, check the transition table to see if there is no transiton = "-"
+        # return a boolean
+        for row in range(nb_row):
+            for col in range(nb_col):
+                if self.transition_table[row][col] == "-": return False
+        return True
+
+    def is_deterministic(self, nb_row, nb_col, nb_initial):
+        # Check the automaton to see if
+        # there is 1 initial state
+        # there is no ambiguity
+        # return a boolean
+        if nb_initial != 1: return False
+        for row in range(nb_row):
+            for col in range(nb_col):
+                # check to see if can be decomposed because go to several places marked by ,
+                for character in self.transition_table[row][col]:
+                    if character == ",": return False
+        return True
+
+    def is_standardized(self, nb_row, nb_col, nb_initial):
+        # check if standardized if
+        # 1 initial state
+        # no transition toward it
+        # return a boolean
+        if nb_initial != 1: return False
+        initial = self.initial[0]
+        for row in range(nb_row):
+            for col in range(nb_col):
+                for character in self.transition_table[row][col]:
+                    if character == initial: return False
+        return True
+
+
+
+
 
     def __init__(self, file_path):
         self.name = file_path # path of the file from the directory
