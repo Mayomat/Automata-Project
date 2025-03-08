@@ -4,6 +4,7 @@ class State:
     def __init__(self, number):
         self.num = number
         self.transitions = [[] for x in range(26)] # An array of 26 array listing all transitions
+        self.initial = False
         self.terminal = False
 
 
@@ -11,7 +12,7 @@ class Automata:
     def __init__(self):
         self.initial = []     # array storing all the initial state
         self.nb_initial = 0
-        self.final = []       # array storing all the final state
+        self.terminal = []       # array storing all the final state
         self.nb_final = 0
         self.states = []      # array storing all states in the automata
         self.nb_states = 0
@@ -33,20 +34,24 @@ class Automata:
                 self.states.append(new_state)
 
             # 3rd line filled with initial states
-            line = file.readline().split()
-            self.nb_initial = int(line[0])
+            init_line = file.readline().split()
+            self.nb_initial = int(init_line[0])
             for i in range(1, self.nb_initial + 1):
-                self.initial.append(int(line[i]))
+                self.initial.append(int(init_line[i]))
+
+            # Putting all entry states in the list "initial" as initial
+            for i in range(self.nb_initial):
+                self.states[self.initial[i]].initial = True
 
             # 4th line filled with final states
-            line = file.readline().split()
-            self.nb_final = int(line[0])
+            term_line = file.readline().split()
+            self.nb_final = int(term_line[0])
             for i in range(1, self.nb_final + 1):
-                self.final.append(int(line[i]))
+                self.terminal.append(int(term_line[i]))
 
             # Putting all final states in the list "final" as terminal
             for i in range(self.nb_final):
-                self.states[self.final[i]].terminal = True
+                self.states[self.terminal[i]].terminal = True
 
             # 5th line gives the number of transition so line after this one in the txt
             self.nb_transition = int(file.readline())
@@ -98,9 +103,9 @@ class Automata:
                 print(f"{str(self.transition_table[row][col]):5}", end=" ")
             print()
 
-    def string_spaced(nb_space, elem):
+    def string_spaced(self, nb_space, elem):
         # This shit don't work
-        # Want to create a function that compute the space for each values in the table to be beautiful based on the number of trnasition
+        # Want to create a function that compute the space for each values in the table to be beautiful based on the number of transition
 
         if len(elem) == nb_space: return elem
         string = " "
@@ -110,7 +115,7 @@ class Automata:
         return elem
 
     def is_complete(self):
-        # function to detect if the automata is complete or not, check the transition table to see if there is no transiton = "-"
+        # function to detect if the automata is complete or not, check the transition table to see if there is no transition = "-"
         # return a boolean
         for row in range(self.nb_transition):
             for col in range(self.nb_alphabet):
