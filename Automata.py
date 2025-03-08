@@ -127,12 +127,27 @@ class Automata:
         # there is 1 initial state
         # there is no ambiguity
         # return a boolean
+        #Remi
         if self.nb_initial != 1: return False
         for row in range(self.nb_transition):
             for col in range(self.nb_alphabet):
                 # check to see if can be decomposed because go to several places marked by ,
                 for character in self.transition_table[row][col]:
                     if character == ",": return False
+        #Paul
+        for row in range(self.nb_transition):
+            for col in range(self.nb_alphabet):
+                if len(fa.transition_table[row][col) > 1:
+                    if i//2 == 0:
+                        if self.transition_table[row][col+1] != '-':
+                            print(f"At the state {row//2} there is 2 transitions with the same letter {self.transition_table[row][col]}, " 
+                                  f"{self.transition_table[row][col+1]}")
+                            return False
+                    else:
+                        if self.transition_table[row][col-1] != '-':
+                            print(f"At the state {row//2} there is 2 transitions with the same letter: {self.transition_table[row][col}, "
+                                  f"{self.transition_table[row][col-1]}")
+                            return False
         return True
 
     def is_standardized(self):
