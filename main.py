@@ -8,10 +8,8 @@ eg.create_table()
 eg.fill_transition_table()
 eg.display_transition_table()
 eg.is_deterministic()
-eg.standardize()
-
-"""
-print("- - - - - - -")
+print(eg.find_non_accessible_states())
+            
 
 ex = Automata()
 ex.create_automaton_from_file('eg.txt')

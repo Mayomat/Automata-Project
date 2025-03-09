@@ -1,4 +1,5 @@
 from usage import *
+from queue import *
 
 class State:
     def __init__(self, number):
@@ -6,6 +7,7 @@ class State:
         self.transitions = [[] for x in range(26)] # An array of 26 array listing all transitions
         self.initial = False
         self.terminal = False
+
 
 
 class Automata:
@@ -116,40 +118,153 @@ class Automata:
         return elem
 
     def is_complete(self):
-        # function to detect if the automata is complete or not, check the transition table to see if there is no transition = "-"
-        # return a boolean
-        for row in range(self.nb_transition):
-            for col in range(self.nb_alphabet):
-                if self.transition_table[row][col] == "-": return False
+        """
+        function to detect if the automaton is complete or not
+        :return: bool
+        """
+        for state in self.states:
+            for i in range(self.nb_alphabet):
+                if len(state.transitions[i]) == 0:
+                    return False
         return True
 
+    def complete(self):
+        """
+        function completing an automaton
+        """
+        if not self.is_complete():
+            garbage = State(self.nb_states)
+            self.nb_states += 1
+            self.states.append(garbage)
+            for state in self.states:
+                for i in range(self.nb_alphabet):
+                    if len(state.transitions[i]) == 0:
+                        state.transitions[i].append(garbage.num)
+
+
+
+    # def is_deterministic(self):
+    #     # Check the automaton to see if
+    #     # there is 1 initial state
+    #     # there is no ambiguity
+    #     # return a boolean
+    #     #Remi
+    #     if self.nb_initial != 1: return False
+    #     for row in range(self.nb_transition):
+    #         for col in range(self.nb_alphabet):
+    #             # check to see if it can be decomposed because go to several places marked by ,
+    #             for character in self.transition_table[row][col]:
+    #                 if character == ",": return False
+    #     #Paul
+    #     for row in range(self.nb_transition):
+    #         for col in range(self.nb_alphabet):
+    #             if len(self.transition_table[row][col]) > 1:
+    #                 if col//2 == 0:
+    #                     if self.transition_table[row][col+1] != '-':
+    #                         print(f"At the state {row//2} there is 2 transitions with the same letter {self.transition_table[row][col]}, "
+    #                               f"{self.transition_table[row][col+1]}")
+    #                         return False
+    #                 else:
+    #                     if self.transition_table[row][col-1] != '-':
+    #                         print(f"At the state {row//2} there is 2 transitions with the same letter: {self.transition_table[row][col]}, "
+    #                               f"{self.transition_table[row][col-1]}")
+    #                         return False
+    #     return True
+
+
     def is_deterministic(self):
-        # Check the automaton to see if
-        # there is 1 initial state
-        # there is no ambiguity
-        # return a boolean
-        #Remi
-        if self.nb_initial != 1: return False
-        for row in range(self.nb_transition):
-            for col in range(self.nb_alphabet):
-                # check to see if can be decomposed because go to several places marked by ,
-                for character in self.transition_table[row][col]:
-                    if character == ",": return False
-        #Paul
-        for row in range(self.nb_transition):
-            for col in range(self.nb_alphabet):
-                if len(self.transition_table[row][col]) > 1:
-                    if col//2 == 0:
-                        if self.transition_table[row][col+1] != '-':
-                            print(f"At the state {row//2} there is 2 transitions with the same letter {self.transition_table[row][col]}, " 
-                                  f"{self.transition_table[row][col+1]}")
-                            return False
-                    else:
-                        if self.transition_table[row][col-1] != '-':
-                            print(f"At the state {row//2} there is 2 transitions with the same letter: {self.transition_table[row][col]}, "
-                                  f"{self.transition_table[row][col-1]}")
-                            return False
+        """
+        function to detect if the automaton is deterministic or not
+        It is deterministic if :
+        - there is 1 initial state
+        -there is no ambiguity
+        :return: bool
+        """
+        if self.nb_final>1:
+            return False
+        for state in self.states:
+            for i in range(self.nb_alphabet):
+                if len(state.transitions[i]) >1:
+                    return False
         return True
+
+    def determine(self):
+        """
+        Function to determine the automaton if it is not deterministic yet
+        :return: Automata
+        """
+        if not self.is_deterministic():
+            deter_automaton = Automata()
+            deter_automaton.nb_alphabet = self.nb_alphabet
+            # creation of a dict to understand the link between old states and new states :
+            # For example if the new state 3 represent the state 5, 7, and 9 of the non-deterministic automaton,
+            # we'll have :
+            # { 3 : [5, 7, 9] }
+            dict_links = {}
+
+            # creation of the only initial state of the deterministic automaton
+            initial_state = State(0)
+            initial_state.initial = True
+            deter_automaton.states.append(initial_state)
+            deter_automaton.nb_states += 1
+            deter_automaton.nb_initial += 1
+            deter_automaton.initial.append(0)
+
+            # adding it to the dictionary link to all the states it represent
+            dict_links[0] = set()
+            for state in self.initial:
+                dict_links[0].add(state)
+
+            # creation of a queue to control the creation and treatment of all the states :
+            # if we create a new states for the automaton, we add it to the queue, it will then be treated later
+            determinization_queue = Queue()
+            determinization_queue.enqueue(initial_state)
+
+            # we create a while loop to treat every state until there are none
+            while not determinization_queue.isEmpty():
+                state_to_treat = determinization_queue.dequeue()
+                for i in range(self.nb_alphabet):
+                    exist_already = False
+                    if len(dict_links[state_to_treat.num]) != 0:
+                        deter_automaton.nb_transition += 1
+
+                        # we create a set to get all the transition for this state
+                        transition_equivalence = set()
+                        for state_number in dict_links[state_to_treat.num]:
+                            for transition in self.states[state_number].transitions[i]:
+                                transition_equivalence.add(transition)
+
+                        # we check we didn't already create this state
+                        for key in dict_links.keys():
+                            if dict_links[key] == transition_equivalence:
+                                state_to_treat.transitions[i].append(key)
+                                exist_already = True
+                                break
+
+                        # we create a new state if we don't have it yet
+                        if not exist_already:
+                            new_state = State(deter_automaton.nb_states)
+                            # We check if it is a terminal state
+                            for name_state in transition_equivalence:
+                                if self.states[name_state].terminal:
+                                    state_to_treat.terminal = True
+                            if state_to_treat.terminal and (state_to_treat.num not in deter_automaton.terminal):
+                                deter_automaton.terminal.append(state_to_treat.num)
+
+                            deter_automaton.states.append(new_state)
+
+                            # We add it as the only transition for the state in treatment
+                            state_to_treat.transitions[i].append(new_state.num)
+                            # We precise in the dict we created this new state and which state it represent
+                            dict_links[deter_automaton.nb_states] = transition_equivalence
+                            deter_automaton.nb_states += 1
+                            # We then enqueue it to treat it after
+                            determinization_queue.enqueue(new_state)
+            return deter_automaton
+        return self
+
+
+
 
     def is_standardized(self):
         # check if standardized if
