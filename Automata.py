@@ -186,6 +186,25 @@ class Automata:
 
         return non_accessible_states
 
-
-    def standardize(self, nb_row, nb_col, ):
-        pass
+    #Need to fix things before verifying that it works
+    def standardize(self):
+        """
+        An automaton is standardized if it has only one initial state,
+        and no transition goes to the initial state
+        """
+        #Combine every initial states transitions into a new initial state
+        #if self.is_standardized():
+            #return
+        init_state = State(self.nb_alphabet + 1) #New initial state
+        init_state.initial = True
+        self.nb_states += 1
+        self.nb_initial = 1
+        #For each transition in each initial state
+        for state in self.initial:
+            self.states[state].initial = False  # Remove the initial attribute from the state
+            for i in range(self.nb_alphabet):
+                if self.states[state].transitions[i] in init_state.transitions[i]:
+                    init_state.transitions[i].append(state.num) #We add to the new initial state each transition
+                    self.nb_transition += 1
+        self.states.append(init_state)# Add the new states into the automaton's state list
+        self.initial = [init_state.num] # Change the automaton's initial state list to our new initial state
