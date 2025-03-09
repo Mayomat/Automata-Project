@@ -25,6 +25,7 @@ class Automata:
         with open(file_path, "r", encoding='utf-8') as file:
             # first line : number of letter used in the alphabet
             self.nb_alphabet = int(file.readline())
+
             # 2nd line : number of states in the automaton
             self.nb_states = int(file.readline())
 
@@ -97,7 +98,7 @@ class Automata:
         print()
 
 
-        for row in range(self.nb_transition):
+        for row in range(self.nb_states):
             for col in range(self.nb_alphabet):
                 if col == 0: print(f"{row: 5}", end=" ")       # print the ordonnée so the transition
                 print(f"{str(self.transition_table[row][col]):5}", end=" ")
@@ -137,15 +138,15 @@ class Automata:
         #Paul
         for row in range(self.nb_transition):
             for col in range(self.nb_alphabet):
-                if len(fa.transition_table[row][col) > 1:
-                    if i//2 == 0:
+                if len(self.transition_table[row][col]) > 1:
+                    if col//2 == 0:
                         if self.transition_table[row][col+1] != '-':
                             print(f"At the state {row//2} there is 2 transitions with the same letter {self.transition_table[row][col]}, " 
                                   f"{self.transition_table[row][col+1]}")
                             return False
                     else:
                         if self.transition_table[row][col-1] != '-':
-                            print(f"At the state {row//2} there is 2 transitions with the same letter: {self.transition_table[row][col}, "
+                            print(f"At the state {row//2} there is 2 transitions with the same letter: {self.transition_table[row][col]}, "
                                   f"{self.transition_table[row][col-1]}")
                             return False
         return True
@@ -162,6 +163,29 @@ class Automata:
                 for character in self.transition_table[row][col]:
                     if character == initial: return False
         return True
+
+    def find_non_accessible_states(self):
+
+        """
+        From the initial states go to every state using transitions and save the visited states
+        If a state is not part of the accessible ones, then it is non-accessible
+        """
+
+        non_accessible_states = []
+        accessible_states = self.initial # List updating itself with accessible states, first accessible states are initial ones
+        for state in accessible_states:
+            for i in range(self.nb_alphabet): # For every possible transition
+                for next_state in self.states[state].transitions[i]: # If a transition exists to a non accessed state then the state is accessible
+                    if next_state not in accessible_states: # If we did not already visit it, add it to accessible states
+                        accessible_states.append(self.states[next_state].num)
+
+        # Save the non-accessible states
+        for state in self.states:
+            if state.num not in accessible_states:
+                non_accessible_states.append(state.num)
+
+        return non_accessible_states
+
 
     def standardize(self, nb_row, nb_col, ):
         pass
