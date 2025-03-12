@@ -70,7 +70,7 @@ class Automata:
     def create_table(self):
         # create the table for the transition table
         # nb_column = nb_alphabet
-
+        self.transition_table = []
         for row in range(self.nb_transition):
             self.transition_table.append(["-"] * self.nb_alphabet)
 
@@ -180,7 +180,7 @@ class Automata:
         -there is no ambiguity
         :return: bool
         """
-        if self.nb_final>1:
+        if self.nb_final > 1:
             return False
         for state in self.states:
             for i in range(self.nb_alphabet):
@@ -298,16 +298,15 @@ class Automata:
 
         return non_accessible_states
 
-    #Need to fix things before verifying that it works
     def standardize(self):
         """
         An automaton is standardized if it has only one initial state,
         and no transition goes to the initial state
         """
-        #Combine every initial states transitions into a new initial state
-        #if self.is_standardized():
-            #return
-        init_state = State(self.nb_alphabet + 1) #New initial state
+        # Combine every initial states transitions into a new initial state
+        if self.is_standardized():
+            return
+        init_state = State(self.nb_states) #New initial state
         init_state.initial = True
         self.nb_states += 1
         self.nb_initial = 1
@@ -315,8 +314,9 @@ class Automata:
         for state in self.initial:
             self.states[state].initial = False  # Remove the initial attribute from the state
             for i in range(self.nb_alphabet):
-                if self.states[state].transitions[i] in init_state.transitions[i]:
-                    init_state.transitions[i].append(state.num) #We add to the new initial state each transition
-                    self.nb_transition += 1
+                for transition in self.states[state].transitions[i]:
+                    if transition not in init_state.transitions[i]:
+                        init_state.transitions[i].append(transition) #We add to the new initial state each transition
+                        self.nb_transition += 1
         self.states.append(init_state)# Add the new states into the automaton's state list
         self.initial = [init_state.num] # Change the automaton's initial state list to our new initial state
