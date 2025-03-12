@@ -263,20 +263,17 @@ class Automata:
             return deter_automaton
         return self
 
-
-
-
     def is_standardized(self):
         # check if standardized if
         # 1 initial state
         # no transition toward it
         # return a boolean
-        if self.nb_initial != 1: return False
-        initial = self.initial[0]
-        for row in range(self.nb_transition):
-            for col in range(self.nb_alphabet):
-                for character in self.transition_table[row][col]:
-                    if character == initial: return False
+        if self.nb_initial != 1:
+            return False
+        for state in self.states: # For every state in the automaton
+            for i in range(self.nb_alphabet): # Go through all transition of the state
+                if self.initial[0] in state.transitions[i]: # Check if the initial state is in any transition
+                    return False
         return True
 
     def find_non_accessible_states(self):
