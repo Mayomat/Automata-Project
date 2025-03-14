@@ -65,7 +65,68 @@ class Automata:
                 after_state = int(line[2])
                 self.states[before_state].transitions[get_index(transition)].append(after_state)
 
+    def max_transitions(self, index):
+        maxi = 0
+        for state in self.states:
+            length = len(state.transitions[index])
+            if length > maxi:
+                maxi = length
+        return maxi
 
+    """
+    ----------------------------------------------
+    | Initial | State |   a   |  b  | Terminal |
+    ----------------------------------------------
+    |  ---->  |   0   | 0,1,3 | 1,2 |  ---->   |
+    ----------------------------------------------
+    |         |   1   | 2     |     |          |
+    ----------------------------------------------
+    |  ---->  |   2   | 0     |     |  ---->   |
+    ----------------------------------------------
+    """
+    def display_table(self):
+        nb_trans_lst = [self.max_transitions(i) for i in range(self.nb_alphabet)] #Get the max transition for each letter
+
+        # Modify the list into space taken for each column
+        for i in range(len(nb_trans_lst)):
+            if nb_trans_lst[i] == 1:
+                nb_trans_lst[i] = 5
+            else:
+                nb_trans_lst[i] = 1+2*nb_trans_lst[i]
+
+        delimiter = "-" * (30 + sum(nb_trans_lst)+self.nb_alphabet) #30 for the fixed columns,init,state,term, computation for the transition
+
+        print(delimiter) # Line 1 : Header
+
+        # Line 2 : Column title
+        print("| Initial | State |", end="")
+        for i in range(self.nb_alphabet): # Every transitions
+            print(alphabet[i].center(nb_trans_lst[i], " "), end="|")
+        print(" Terminal |")
+
+        print(delimiter) # Line 3 : Delimiter
+
+        for state in self.states: # Display each lines
+            # Display the initial column
+            if state.initial:
+                print("|  ---->  ", end="") # If initial, print the arrow
+            else:
+                print("|         ", end="")
+
+            #Display the state number
+            print("|   "+str(state.num)+"   |", end="")
+
+            #Display the state transitions
+            for i in range(self.nb_alphabet):
+                print((",".join(str(s) for s in state.transitions[i])).center(nb_trans_lst[i], " "), end="|")
+
+            # Display the initial column
+            if state.terminal:
+                print("  <-----  |") # If terminal, print the arrow
+            else:
+                print("          |")
+
+        print(delimiter) # Final line
 
     def create_table(self):
         # create the table for the transition table
