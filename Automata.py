@@ -120,7 +120,7 @@ class Automata:
             for i in range(self.nb_alphabet):
                 print((",".join(str(s) for s in state.transitions[i])).center(nb_trans_lst[i], " "), end="|")
 
-            # Display the initial column
+            # Display the terminal column
             if state.terminal:
                 print("  <-----  |") # If terminal, print the arrow
             else:
