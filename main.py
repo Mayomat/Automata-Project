@@ -24,6 +24,8 @@ ex.standardize()
 ex.create_table()
 ex.fill_transition_table()
 ex.display_transition_table()
+print(ex.max_transitions(1))
+ex.display_table()
 
 
 """
