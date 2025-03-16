@@ -359,6 +359,10 @@ class Automata:
 
         return non_accessible_states
 
+    def complementarize(self):
+        # Inverse terminal and non-terminal states
+        for state in self.states: state.terminal = not state.terminal
+
     def standardize(self):
         """
         An automaton is standardized if it has only one initial state,
