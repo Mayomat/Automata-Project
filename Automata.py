@@ -320,3 +320,53 @@ class Automata:
                         self.nb_transition += 1
         self.states.append(init_state)# Add the new states into the automaton's state list
         self.initial = [init_state.num] # Change the automaton's initial state list to our new initial state
+
+    def minimize(self):
+        """
+        To minimize : determine, complete, check there are no non-accessible states
+        :return: automata
+        """
+        automaton = self.determine() # we determine so there are no non-accessible state
+        automaton.complete()
+        automaton.create_table()
+        automaton.fill_transition_table()
+        automaton.display_transition_table()
+
+        groups = {"T" : set(automaton.terminal)}
+        print(groups)
+        new_states = []
+        for state in automaton.states:
+            new_state = State(state.num)
+            for i in range(automaton.nb_alphabet):
+                if state.transitions[i][0] in groups["T"]:
+                    new_state.transitions[i].append("T")
+                else :
+                    new_state.transitions[i].append("NT")
+            new_states.append(new_state)
+
+        groups= {}
+        i = 0
+        for state in new_states:
+            found = False
+            for item in groups.items():
+                if state.transitions == new_states[item[1][0]].transitions and state.terminal ==new_states[item[1][0]].terminal:
+                    groups[item[0]].append(state.num)
+                    found = True
+            if not found:
+                groups[i] = [state.num]
+                i+= 1
+        print(groups)
+        groups_second = {}
+
+        new_states = []
+        for state in automaton.states:
+            new_state = State(state.num)
+            for i in range(automaton.nb_alphabet):
+                for key in groups_second.keys():
+                    if state.transitions[i][0] in groups[key]:
+                        new_state.transitions[i].append(key)
+                    else:
+                        new_state.transitions[i].append("NT")
+            new_states.append(new_state)
+
+
