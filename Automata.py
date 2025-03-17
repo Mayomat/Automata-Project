@@ -1,3 +1,5 @@
+from operator import truediv
+
 from usage import *
 from queue import *
 
@@ -7,6 +9,22 @@ class State:
         self.transitions = [[] for x in range(26)] # An array of 26 array listing all transitions
         self.initial = False
         self.terminal = False
+
+    def compare_to_minimize(self, other):
+        """
+        Check if two states can be grouped to be then minimized together
+        :param other: second state
+        :return: bool
+        """
+        same = True
+        if self.terminal != other.terminal:
+            same = False
+
+        for i in range(26):
+            if self.transitions[i] != other.transitions[i]:
+                same = False
+
+        return same
 
 
 
@@ -241,7 +259,7 @@ class Automata:
         -there is no ambiguity
         :return: bool
         """
-        if self.nb_final > 1:
+        if self.nb_initial > 1:
             return False
         for state in self.states:
             for i in range(self.nb_alphabet):
@@ -271,7 +289,7 @@ class Automata:
             deter_automaton.nb_initial += 1
             deter_automaton.initial.append(0)
 
-            # adding it to the dictionary link to all the states it represent
+            # adding it to the dictionary link to all the states it represents
             dict_links[0] = set()
             for state in self.initial:
                 dict_links[0].add(state)
@@ -308,9 +326,9 @@ class Automata:
                             # We check if it is a terminal state
                             for name_state in transition_equivalence:
                                 if self.states[name_state].terminal:
-                                    state_to_treat.terminal = True
-                            if state_to_treat.terminal and (state_to_treat.num not in deter_automaton.terminal):
-                                deter_automaton.terminal.append(state_to_treat.num)
+                                    new_state.terminal = True
+                            if new_state.terminal and (new_state.num not in deter_automaton.terminal):
+                                deter_automaton.terminal.append(new_state.num)
 
                             deter_automaton.states.append(new_state)
 
@@ -381,3 +399,108 @@ class Automata:
                         self.nb_transition += 1
         self.states.append(init_state)# Add the new states into the automaton's state list
         self.initial = [init_state.num] # Change the automaton's initial state list to our new initial state
+
+
+    def minimize(self):
+        """
+        To minimize : determine, complete, check there are no non-accessible states
+        :return: automata
+        """
+        automaton = self.determine() # we determine --> there are no non-accessible state
+        for state in automaton.states:
+            print(state.num, state.terminal)
+
+        automaton.complete()
+
+
+        # At first, we only have 2 groups : terminal and non-terminal
+        groups = [[], []]
+        for state in automaton.states:
+            if state.terminal:
+                groups[0].append(state)
+            else:
+                groups[1].append(state)
+
+        for group in groups:
+            display_group(group)
+        print()
+
+
+
+        # this boolean is put to true when after a step we still have the same groups
+        stop = False
+        # loop running until every group is in list(reunited)
+        while not stop:
+            # We create a new list group which we'll compare to the old list groups
+            new_groups = []
+            # We create a list with the same states but with transitions link to the old groups (at first it is 1 or 0)
+            new_states = []
+
+            # We add new states with the new transitions
+            for state in automaton.states:
+                state_new_transition = State(state.num)
+                if state.terminal:
+                    state_new_transition.terminal = True
+                if state.initial:
+                    state_new_transition.initial = True
+
+                for i in range(self.nb_alphabet):
+                    transition = state.transitions[i][0]
+                    for y in range(len(groups)):
+                        if state_in_list(groups[y], transition):
+                            state_new_transition.transitions[i].append(y)
+                            break
+                new_states.append(state_new_transition)
+
+            # regroup the different state into groups
+            for state in new_states:
+                found = False
+                for group in new_groups:
+                    # check if the state can be in this group
+                    if group[0].compare_to_minimize(state):
+                        group.append(state)
+                        found = True
+                        break
+                # if the state can not be grouped, we create a new group
+                if not found:
+                    new_groups.append([state])
+
+            # compare new_groups with groups to see if it changed
+            stop = True
+            for new_group in new_groups:
+                found = False
+                for group in groups :
+                    if compare_two_list_of_states(new_group, group):
+                        found = True
+                        break
+                if not found:
+                    stop = False
+                    break
+
+            groups = new_groups
+            for group in groups:
+                display_group(group)
+
+        # creation of the new automaton
+        minimized_automaton = Automata()
+        minimized_automaton.nb_initial = 1
+        minimized_automaton.nb_states = len(groups)
+        minimized_automaton.nb_alphabet = self.nb_alphabet
+        for i in range(minimized_automaton.nb_states):
+            minimized_automaton.states.append(groups[i][0])
+            minimized_automaton.states[i].num = i
+
+
+        for i in range(len(groups)):
+            for state in groups[i]:
+                if state.initial:
+                    minimized_automaton.states[i].initial = True
+                if state.terminal:
+                    minimized_automaton.states[i].terminal = True
+
+        for state in minimized_automaton.states:
+            if state.terminal:
+                minimized_automaton.nb_final += 1
+
+        minimized_automaton.nb_transition = minimized_automaton.nb_states * minimized_automaton.nb_alphabet
+        return minimized_automaton
