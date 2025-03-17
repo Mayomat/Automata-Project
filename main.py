@@ -14,6 +14,18 @@ print(eg.find_non_accessible_states())
 """
 
 
+ex = Automata()
+ex.create_automaton_from_file('eg.txt')
+ex.create_table()
+ex.display_transition_table()
+ex.fill_transition_table()
+ex.display_transition_table()
+ex.standardize()
+ex.create_table()
+ex.fill_transition_table()
+ex.display_transition_table()
+print(ex.max_transitions(1))
+ex.display_table()
 
 
 """
