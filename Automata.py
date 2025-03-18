@@ -115,3 +115,33 @@ class Automata:
                 # we fill the transition table
                 else:
                     self.fill_transition_table(line)
+
+
+    def recognize_word(self, word):
+        determine_aut = self.determine()
+        current_state = determine_aut.initial[0]
+        for letter in word:
+            index_letter = get_index(letter)
+            if not index_letter > determine_aut.nb_alphabet:  # Check that the letter is accepted by the automaton
+                print("One letter is not taken by automaton ")
+                return False
+
+            if determine_aut.transition_table[current_state][index_letter] == '-':
+                return False
+            else:
+                current_state = int(determine_aut.transition_table[current_state][index_letter])  # Next state to check
+        return True
+
+    def word_recognition(self):
+        print(f"The world is composed of the letters : ")
+        for i in range(self.nb_alphabet):
+            print(alphabet[i], end=" ")
+        print()
+        word = input("Enter a word according to the letters accepted by the automaton: (Put 'end' to stop)")
+
+        while word != "end":
+            if self.recognize_word(word):
+                print(f"The word {word} is recognize by the automaton ")
+            else:
+                print(f"The word {word} is NOT recognize by the automaton ")
+            word = input("Enter a word according to the letters accepted by the automaton: (Put 'end' to stop)")
