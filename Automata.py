@@ -501,6 +501,7 @@ class Automata:
         for state in minimized_automaton.states:
             if state.terminal:
                 minimized_automaton.nb_final += 1
+                minimized_automaton.terminal.append(state.num)
 
         minimized_automaton.nb_transition = minimized_automaton.nb_states * minimized_automaton.nb_alphabet
         return minimized_automaton
