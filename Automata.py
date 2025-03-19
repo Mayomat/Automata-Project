@@ -112,27 +112,27 @@ class Automata:
             else:
                 nb_trans_lst[i] = 1+2*nb_trans_lst[i]
 
-        delimiter = "-" * (30 + sum(nb_trans_lst)+self.nb_alphabet) #30 for the fixed columns,init,state,term, computation for the transition
+        delimiter = "═" * (30 + sum(nb_trans_lst)+self.nb_alphabet) #30 for the fixed columns,init,state,term, computation for the transition
 
         print(delimiter) # Line 1 : Header
 
         # Line 2 : Column title
-        print("| Initial | State |", end="")
+        print("║ Initial ║ State ║", end="")
         for i in range(self.nb_alphabet): # Every transitions
-            print(alphabet[i].center(nb_trans_lst[i], " "), end="|")
-        print(" Terminal |")
+            print(alphabet[i].center(nb_trans_lst[i], " "), end="║")
+        print(" Terminal ║")
 
         print(delimiter) # Line 3 : Delimiter
 
         for state in self.states: # Display each lines
             # Display the initial column
             if state.initial:
-                print("|  ---->  ", end="") # If initial, print the arrow
+                print("║  ---->  ", end="") # If initial, print the arrow
             else:
-                print("|         ", end="")
+                print("║         ", end="")
 
             #Display the state number
-            print("|   "+str(state.num)+"   |", end="")
+            print("║   "+str(state.num)+"   ║", end="")
 
             #Display the state transitions
             for i in range(self.nb_alphabet):
@@ -142,7 +142,7 @@ class Automata:
             if state.terminal:
                 print("  ----->  |") # If terminal, print the arrow
             else:
-                print("          |")
+                print("          ║")
 
         print(delimiter) # Final line
 
