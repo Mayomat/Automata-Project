@@ -140,7 +140,7 @@ class Automata:
 
             # Display the terminal column
             if state.terminal:
-                print("  <-----  ║") # If terminal, print the arrow
+                print("  ----->  |") # If terminal, print the arrow
             else:
                 print("          ║")
 
@@ -219,36 +219,6 @@ class Automata:
                 for i in range(self.nb_alphabet):
                     if len(state.transitions[i]) == 0:
                         state.transitions[i].append(garbage.num)
-
-
-
-    # def is_deterministic(self):
-    #     # Check the automaton to see if
-    #     # there is 1 initial state
-    #     # there is no ambiguity
-    #     # return a boolean
-    #     #Remi
-    #     if self.nb_initial != 1: return False
-    #     for row in range(self.nb_transition):
-    #         for col in range(self.nb_alphabet):
-    #             # check to see if it can be decomposed because go to several places marked by ,
-    #             for character in self.transition_table[row][col]:
-    #                 if character == ",": return False
-    #     #Paul
-    #     for row in range(self.nb_transition):
-    #         for col in range(self.nb_alphabet):
-    #             if len(self.transition_table[row][col]) > 1:
-    #                 if col//2 == 0:
-    #                     if self.transition_table[row][col+1] != '-':
-    #                         print(f"At the state {row//2} there is 2 transitions with the same letter {self.transition_table[row][col]}, "
-    #                               f"{self.transition_table[row][col+1]}")
-    #                         return False
-    #                 else:
-    #                     if self.transition_table[row][col-1] != '-':
-    #                         print(f"At the state {row//2} there is 2 transitions with the same letter: {self.transition_table[row][col]}, "
-    #                               f"{self.transition_table[row][col-1]}")
-    #                         return False
-    #     return True
 
 
     def is_deterministic(self):
@@ -501,6 +471,36 @@ class Automata:
         for state in minimized_automaton.states:
             if state.terminal:
                 minimized_automaton.nb_final += 1
+                minimized_automaton.terminal.append(state.num)
 
         minimized_automaton.nb_transition = minimized_automaton.nb_states * minimized_automaton.nb_alphabet
         return minimized_automaton
+
+    def recognize_word(self, word):
+        determine_aut = self.determine()
+        determine_aut.complete()
+        current_state = determine_aut.states[determine_aut.initial[0]]
+        for letter in word:
+            index_letter = get_index(letter)
+            if index_letter > determine_aut.nb_alphabet:  # Check that the letter is accepted by the automaton
+                print("One letter is not taken by automaton ")
+                return False
+
+            else:
+                current_state = determine_aut.states[current_state.transitions[index_letter][0]]  # Next state to check
+        return current_state.terminal
+
+    def word_recognition(self):
+        print(f"The world is composed of the letters : ")
+        for i in range(self.nb_alphabet):
+            print(alphabet[i], end=" ")
+        print()
+        word = input("Enter a word according to the letters accepted by the automaton (Put 'end' to stop) :")
+        print()
+        while word != "end":
+            if self.recognize_word(word):
+                print(f"The word {word} is recognize by the automaton ")
+            else:
+                print(f"The word {word} is NOT recognize by the automaton ")
+            word = input("Enter a word according to the letters accepted by the automaton: (Put 'end' to stop)")
+            print()

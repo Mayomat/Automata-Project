@@ -85,3 +85,4 @@ for i in range(len(ex.initial[0].transitions)):
         print(eg.transition_table[i][j], end="")
     print("]", end="")
 """
+
