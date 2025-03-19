@@ -1,18 +1,5 @@
 from Automata import *
 
-# create and display the automata from "eg.txt"
-
-"""
-eg = Automata()
-eg.create_automaton_from_file('eg.txt')
-eg.create_table()
-eg.fill_transition_table()
-eg.display_transition_table()
-eg.is_deterministic()
-print(eg.is_standardized())
-print(eg.find_non_accessible_states())
-"""
-
 def print_menu():
     print("\n")
     print("╔════════════════════════════════════════════════════╗")
@@ -40,7 +27,7 @@ def main():
         print("╚════════════════════════════════════════════════════╝")
         choice = int(input("Enter your choice: "))
         if choice > 0 and choice < 45:
-            path = "Automata/"+str(choice)+".txt"
+            path = "Finite_Automata_files/"+str(choice)+".txt"
         elif choice == 0:
             print("╔════════════════════════════════════════════════════╗")
             print("║                     ByeBye                         ║")
@@ -52,8 +39,7 @@ def main():
             print_menu()
             choice = int(input("Enter your choice: "))
 
-            if choice == 0:
-                ex.create_automaton_from_file(path)
+
             if choice == 0:
                 ex.create_automaton_from_file(path)
             elif choice == 1:
@@ -76,13 +62,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-"""
-print("[")
-for i in range(len(ex.initial[0].transitions)):
-    print("[", end="")
-    for j in range(len(ex.initial[0].transitions[i])):
-        print(eg.transition_table[i][j], end="")
-    print("]", end="")
-"""
-
