@@ -146,45 +146,6 @@ class Automata:
 
         print(delimiter) # Final line
 
-    def create_table(self):
-        # create the table for the transition table
-        # nb_column = nb_alphabet
-        self.transition_table = []
-        for row in range(self.nb_transition):
-            self.transition_table.append(["-"] * self.nb_alphabet)
-
-    def fill_transition_table(self):
-        for state_index in range(len(self.states)):
-            for index_letter in range(len(self.states[state_index].transitions)):
-                for i in range(len(self.states[state_index].transitions[index_letter])):
-                    if self.transition_table[state_index][index_letter] == "-":
-                        self.transition_table[state_index][index_letter] = str(self.states[state_index].transitions[index_letter][i])
-                    else:
-                        self.transition_table[state_index][index_letter] += "," + str(self.states[state_index].transitions[index_letter][i])
-
-
-
-    def display_transition_table(self):
-        # display the table of transition
-        # problem, if the number of character (eg: 1,2,4,6) for transition > 5 then all the table shift
-        # nb_row = nb_transition
-        # nb_column = nb_alphabet
-
-        # there is a problem we don't show the initial and final state
-
-        # print the abscisse of the table
-        print("     ", end=" ")
-        for col in range(self.nb_alphabet):
-            print(f"{chr(col + ord('a')):5}", end=" ")
-        print()
-
-
-        for row in range(self.nb_states):
-            for col in range(self.nb_alphabet):
-                if col == 0: print(f"{row: 5}", end=" ")       # print the ordonnée so the transition
-                print(f"{str(self.transition_table[row][col]):5}", end=" ")
-            print()
-
     def string_spaced(self, nb_space, elem):
         # This shit don't work
         # Want to create a function that compute the space for each values in the table to be beautiful based on the number of transition
@@ -475,6 +436,26 @@ class Automata:
 
         minimized_automaton.nb_transition = minimized_automaton.nb_states * minimized_automaton.nb_alphabet
         return minimized_automaton
+
+    def display_automaton_text(automaton):
+        """Display the automaton as a text-based diagram."""
+        print("Automaton Diagram:")
+        for state in automaton.states:
+            # Draw the state
+            if state.initial:
+                print("-->", end=" ")
+            else:
+                print("   ", end=" ")
+            print(f"({state.num})", end=" ")
+            if state.terminal:
+                print("<--", end=" ")
+            print()
+
+            # Draw transitions
+            for i in range(automaton.nb_alphabet):
+                if state.transitions[i]:
+                    print(f"    {chr(ord('a') + i)} -> {state.transitions[i]}")
+
 
     def recognize_word(self, word):
         determine_aut = self.determine()

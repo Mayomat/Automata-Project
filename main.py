@@ -8,7 +8,7 @@ def print_menu():
     print("║ 0: Build the Automaton                             ║")
     print("║ 1: Determine the Automaton                         ║")
     print("║ 2: Standardize Automaton                           ║")
-    print("║ 3: Minimaze the Automaton                          ║")
+    print("║ 3: Minimize the Automaton                          ║")
     print("║ 4: Recognize the word of the Automaton             ║")
     print("║ 5: Search if the Automaton recognize the inputed   ║")
     print("║ 6: Output the max Transitions from State 1         ║")
@@ -48,17 +48,20 @@ def main():
 
 
             if choice == 0:
-                ex.create_automaton_from_file(path)
-                ex.create_table()
-                ex.fill_transition_table()
-                ex.display_table()
-                Build = True
+                if Build==False:
+                    ex.create_automaton_from_file(path)
+                    ex.display_table()
+                    Build = True
+
+                else:
+                    print("Your automaton is already built, try another function")
+
             elif choice == 1:
                 if not Build:
                     print("Please first Build the Automata")
                 else:
-                    ex.determine()
-                    ex.fill_transition_table()
+                    print("In order to determine the automaton, and for technical purposes, we changed the name of the states, the new automata states and old one are not linked by their names")
+                    ex = ex.determine()
                     ex.display_table()
                     Determined = True
             elif choice == 2:
@@ -93,6 +96,7 @@ def main():
                 else :
                     print(f"Result: {ex.max_transitions(1)}")
             elif choice == 7:
+                ex = Automata() # mandatory, or else the memory keeps the previous automata in memory
                 break
             else:
                 print("Invalid input. Please enter a number.")
