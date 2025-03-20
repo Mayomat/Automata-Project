@@ -112,9 +112,12 @@ class Automata:
             else:
                 nb_trans_lst[i] = 1+2*nb_trans_lst[i]
 
-        delimiter = "═" * (30 + sum(nb_trans_lst)+self.nb_alphabet) #30 for the fixed columns,init,state,term, computation for the transition
+        delimiter = "A"+"═════════"+"B"+"═══════"+"B"
+        for nb in nb_trans_lst :
+            delimiter += "═"*nb + "B"
+        delimiter += "══════════" + "C"
 
-        print(delimiter) # Line 1 : Header
+        print(delimiter.replace("A", "╔").replace("B", "╦").replace("C", "╗")) # Line 1 : Header
 
         # Line 2 : Column title
         print("║ Initial ║ State ║", end="")
@@ -122,7 +125,7 @@ class Automata:
             print(alphabet[i].center(nb_trans_lst[i], " "), end="║")
         print(" Terminal ║")
 
-        print(delimiter) # Line 3 : Delimiter
+        print(delimiter.replace("A", "╠").replace("B", "╬").replace("C", "╣")) # Line 3 : Delimiter
 
         for state in self.states: # Display each lines
             # Display the initial column
@@ -136,15 +139,15 @@ class Automata:
 
             #Display the state transitions
             for i in range(self.nb_alphabet):
-                print((",".join(str(s) for s in state.transitions[i])).center(nb_trans_lst[i], " "), end="|")
+                print((",".join(str(s) for s in state.transitions[i])).center(nb_trans_lst[i], " "), end="║")
 
             # Display the terminal column
             if state.terminal:
-                print("  ----->  |") # If terminal, print the arrow
+                print("  ----->  ║") # If terminal, print the arrow
             else:
                 print("          ║")
 
-        print(delimiter) # Final line
+        print(delimiter.replace("A", "╚").replace("B", "╩").replace("C", "╝")) # Final line
 
     def string_spaced(self, nb_space, elem):
         # This shit don't work
