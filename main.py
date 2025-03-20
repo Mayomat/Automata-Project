@@ -92,7 +92,7 @@ def main():
                     if not build:
                         print("Please first build the Automata")
                     else:
-                        ex.minimize()
+                        ex = ex.minimize()
                         ex.display_table()
 
                 elif choice == 5:  # Recognize the word of the Automaton
