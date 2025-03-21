@@ -57,7 +57,7 @@ def main():
         while True:
             print_menu()
             choice = input("Enter your choice: ")
-            if choice.isdigit():
+            if choice.isdigit(): # verify that it's an int
                 choice = int(choice)
                 if choice == 0:  # Returns to the automaton selection
                     ex = Automata()  # mandatory, or else the memory keeps the previous automata in memory
@@ -66,9 +66,10 @@ def main():
                 elif choice == 1:  # Build the Automaton
                     if not build:
                         ex.create_automaton_from_file(path)
-                        ex.display_table()
-                        build = True
                         ex.display_automaton()
+                        build = True # this boolean is mandatory or else you can build it infinitely
+                        # the states will then be superposed
+
 
                     else:
                         print("Your automaton is already built, try another function")
@@ -80,7 +81,7 @@ def main():
                         print("In order to determine the automaton, and for technical purposes, we changed the name\n"
                               "of the states, the new automaton states and old one are not linked by their names")
                         ex = ex.determine()
-                        ex.display_table()
+                        ex.display_automaton()
                         determined = True
                         #print()
 
@@ -89,15 +90,15 @@ def main():
                         print("Please first build the Automaton")
                     else:
                         ex.standardize()
-                        ex.display_table()
+                        ex.display_automaton()
 
                 elif choice == 4:  # Minimize the Automaton
                     if not build:
                         print("Please first build the Automaton")
                     else:
                         ex = ex.minimize()
-                        ex.display_table()
-                        determined = True
+                        ex.display_automaton()
+                        determined = True # same as built, else it superposed itself
 
                 elif choice == 5:  # Recognize the word of the Automaton
                     if not build:
@@ -126,7 +127,7 @@ def main():
                         print("Please first build the automaton")
                     else:
                         ex.complementary()
-                        ex.display_table()
+                        ex.display_automaton()
 
                 elif choice == 9:
                     if not build:
@@ -137,7 +138,7 @@ def main():
                 elif choice == 10:
                     ex = Automata()
                     ex.create_automaton_from_regEx(input("Enter the desired regular expression :\n"))
-                    ex.display_table()
+                    ex.display_automaton()
                     build = True
 
                 else:

@@ -173,8 +173,7 @@ class Automata:
         print(f"Alphabet size: {self.nb_alphabet}")
         print(f"Alphabet :", end = " ")
         for i in range(self.nb_alphabet):
-            print(alphabet[i], end =", ")
-
+            print(alphabet[i], end=", " if i != self.nb_alphabet - 1 else " ")
 
         print("\n\nStates and Transitions:")
 
