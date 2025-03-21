@@ -68,7 +68,7 @@ def main():
                         ex.create_automaton_from_file(path)
                         ex.display_table()
                         build = True
-
+                        ex.display_automaton()
 
                     else:
                         print("Your automaton is already built, try another function")

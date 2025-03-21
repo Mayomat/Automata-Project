@@ -183,6 +183,8 @@ class Automata:
             for i in range(self.nb_alphabet):
                 if state.transitions[i]:
                     print(f"    {chr(ord('a') + i)} -> {state.transitions[i]}")
+                else :
+                    print("    No transitions")
 
         print("\nTransition Table:")
         self.display_table()
