@@ -2,6 +2,7 @@ from operator import truediv
 
 from usage import *
 from queue import *
+from regEx import *
 
 class State:
     def __init__(self, number):
@@ -338,11 +339,8 @@ class Automata:
         :return: automata
         """
         automaton = self.determine() # we determine --> there are no non-accessible state
-        for state in automaton.states:
-            print(state.num, state.terminal)
 
         automaton.complete()
-
 
         # At first, we only have 2 groups : terminal and non-terminal
         groups = [[], []]
@@ -351,10 +349,6 @@ class Automata:
                 groups[0].append(state)
             else:
                 groups[1].append(state)
-
-        for group in groups:
-            display_group(group)
-        print()
 
 
 
@@ -409,8 +403,6 @@ class Automata:
                     break
 
             groups = new_groups
-            for group in groups:
-                display_group(group)
 
         # creation of the new automaton
         minimized_automaton = Automata()
@@ -485,3 +477,15 @@ class Automata:
                 print(f"The word {word} is NOT recognize by the automaton ")
             word = input("Enter a word according to the letters accepted by the automaton: (Put 'end' to stop)")
             print()
+
+    def create_automaton_from_regEx(self, expression):
+        expression = parenthesis_in_regEx(expression)
+        if check_expression(expression):
+            self.states, self.nb_alphabet = regEx_separation(expression)
+        for state in self.states:
+            if state.initial:
+                self.initial.append(state)
+                self.nb_initial+=1
+            if state.terminal:
+                self.terminal.append(state)
+                self.nb_final+=1
