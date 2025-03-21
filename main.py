@@ -106,7 +106,7 @@ def main():
                             print("No the Automata does not recognized the word" + word)
 
                 elif choice == 6:  # Check if the Automaton recognise your input
-                    if not build or not determined:
+                    if not build:
                         print("Please first build or determine the automata")
                     else:
                         ex.word_recognition()

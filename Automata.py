@@ -262,6 +262,7 @@ class Automata:
                             # We then enqueue it to treat it after
                             determinization_queue.enqueue(new_state)
             return deter_automaton
+        print("The automaton is already determined")
         return self
 
     def is_standardized(self):
@@ -307,6 +308,7 @@ class Automata:
         """
         # Combine every initial states transitions into a new initial state
         if self.is_standardized():
+            print("The automaton is already standardized")
             return
         init_state = State(self.nb_states)  # New initial state
         init_state.initial = True
@@ -314,6 +316,7 @@ class Automata:
         self.nb_initial = 1
         # For each transition in each initial state
         for state in self.initial:
+
             self.states[state].initial = False  # Remove the initial attribute from the state
             for i in range(self.nb_alphabet):
                 for transition in self.states[state].transitions[i]:
@@ -324,6 +327,7 @@ class Automata:
         self.initial = [init_state.num]  # Change the automaton's initial state list to our new initial state
 
     def complementary(self):    # Changes the Automaton to its complementary
+        self.complete()
         self.terminal = []
         for state in self.states:
             state.terminal = not state.terminal
@@ -428,12 +432,18 @@ class Automata:
         determine_aut = self.determine()
         determine_aut.complete()
         current_state = determine_aut.states[determine_aut.initial[0]]
+        if word == " ":
+            if len(determine_aut.initial) == 0 or len(determine_aut.terminal) == 0:
+                return False
+
+            if len(determine_aut.initial) != 0 and len(determine_aut.terminal) != 0:
+                if determine_aut.initial[0] == determine_aut.terminal[0]:
+                    return True
         for letter in word:
             index_letter = get_index(letter)
             if index_letter > determine_aut.nb_alphabet:  # Check that the letter is accepted by the automaton
                 print("One letter is not taken by automaton ")
                 return False
-
             else:
                 current_state = determine_aut.states[current_state.transitions[index_letter][0]]  # Next state to check
         return current_state.terminal
@@ -443,12 +453,12 @@ class Automata:
         for i in range(self.nb_alphabet):
             print(alphabet[i], end=" ")
         print()
-        word = input("Enter a word according to the letters accepted by the automaton (Put 'end' to stop) :")
+        word = input("Enter a word according to the letters accepted by the automaton (Put 'end' to stop):")
         print()
         while word != "end":
             if self.recognize_word(word):
                 print(f"The word {word} is recognized by the automaton ")
             else:
                 print(f"The word {word} is NOT recognized by the automaton ")
-            word = input("Enter a word according to the letters accepted by the automaton: (Put 'end' to stop)")
+            word = input("Enter a word according to the letters accepted by the automaton (Put 'end' to stop):")
             print()
