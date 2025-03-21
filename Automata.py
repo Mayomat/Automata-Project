@@ -1,6 +1,6 @@
 from usage import *
 from queue import *
-
+import re
 
 class State:
     def __init__(self, number):
@@ -76,18 +76,18 @@ class Automata:
             self.nb_transition = int(file.readline())
             for i in range(self.nb_transition):
                 line = file.readline()
-                before_state = int(line[0])
-                transition = line[1]
-                after_state = int(line[2])
-                self.states[before_state].transitions[get_index(transition)].append(after_state)
+                before_state, transition, after_state = re.match(r"(\d+)([a-zA-Z])(\d+)", line).groups()
+                self.states[int(before_state)].transitions[get_index(transition)].append(int(after_state))
 
     def max_transitions(self, index):
         maxi = 0
+        nb_elem = 0
         for state in self.states:
-            length = len(state.transitions[index])
+            length = sum(len(str(nxtState)) for nxtState in state.transitions[index])
             if length > maxi:
                 maxi = length
-        return maxi
+                nb_elem = len(state.transitions[index])
+        return [maxi, nb_elem]
 
     """
     ----------------------------------------------
@@ -106,23 +106,33 @@ class Automata:
                         range(self.nb_alphabet)]  # Get the max transition for each letter
 
         # Modify the list into space taken for each column
-        for i in range(len(nb_trans_lst)):
-            if nb_trans_lst[i] == 1:
-                nb_trans_lst[i] = 5
+        i = 0
+        size_lst = []
+        for length, nb_elem in nb_trans_lst:
+            elem = length + nb_elem - 1
+            if elem == 1:
+                elem = 5
+            elif elem == 2:
+                elem = 6
             else:
-                nb_trans_lst[i] = 1 + 2 * nb_trans_lst[i]
+                elem += 2
+            size_lst.append(elem)
+            i += 1
 
-        delimiter = "A" + "═════════" + "B" + "═══════" + "B"
-        for nb in nb_trans_lst:
+        size_state = 6 + len(str(self.nb_states))   # Size of the column State
+
+        delimiter = "A" + "═════════" + "B" + "═"*size_state + "B"
+        for nb in size_lst:
             delimiter += "═" * nb + "B"
         delimiter += "══════════" + "C"
 
         print(delimiter.replace("A", "╔").replace("B", "╦").replace("C", "╗"))  # Line 1 : Header
 
         # Line 2 : Column title
-        print("║ Initial ║ State ║", end="")
+        print("║ Initial ║", end="")
+        print("State".center(size_state, " ")+"║", end="")
         for i in range(self.nb_alphabet):  # Every transitions
-            print(alphabet[i].center(nb_trans_lst[i], " "), end="║")
+            print(alphabet[i].center(size_lst[i], " "), end="║")
         print(" Terminal ║")
 
         print(delimiter.replace("A", "╠").replace("B", "╬").replace("C", "╣"))  # Line 3 : Delimiter
@@ -135,11 +145,11 @@ class Automata:
                 print("║         ", end="")
 
             # Display the state number
-            print("║   " + str(state.num) + "   ║", end="")
+            print("║" + str(state.num).center(size_state, " ") + "║", end="")
 
             # Display the state transitions
             for i in range(self.nb_alphabet):
-                print((",".join(str(s) for s in state.transitions[i])).center(nb_trans_lst[i], " "), end="║")
+                print((",".join(str(s) for s in state.transitions[i])).center(size_lst[i], " "), end="║")
 
             # Display the terminal column
             if state.terminal:
@@ -220,7 +230,6 @@ class Automata:
             # if we create a new states for the automaton, we add it to the queue, it will then be treated later
             determinization_queue = Queue()
             determinization_queue.enqueue(initial_state)
-
             # we create a while loop to treat every state until there are none
             while not determinization_queue.isEmpty():
                 state_to_treat = determinization_queue.dequeue()
