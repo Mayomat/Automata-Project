@@ -485,10 +485,10 @@ class Automata:
             self.states, self.nb_alphabet = regEx_separation(expression)
         for state in self.states:
             if state.initial:
-                self.initial.append(state)
+                self.initial.append(state.num)
                 self.nb_initial+=1
             if state.terminal:
-                self.terminal.append(state)
+                self.terminal.append(state.num)
                 self.nb_final+=1
 
     def getRegExExpression(self):
@@ -506,13 +506,10 @@ class Automata:
 
         for i in range(len(self.states)):
             dict_expressions[i] = reunites_list_of_string(dict_expressions[i], str(i))
-
             for y in range(len(dict_expressions[i])):
                 dict_expressions[i][y] = clean_string(dict_expressions[i][y])
 
-
             dict_expressions[i] = arden_s_lemma(dict_expressions[i], str(i))
-
 
             dict_expressions[i] = develop(dict_expressions[i])
             for y in range(i+1, len(self.states)):
@@ -520,6 +517,16 @@ class Automata:
                 dict_expressions[y] = develop_list(dict_expressions[y])
 
 
+        #check there are no number left
+        i = len(self.states) -1
+        while i>-1:
+            for y in range(i):
+                dict_expressions[y] = replace(dict_expressions[y], str(i), dict_expressions[i])
+                dict_expressions[y] = develop_list(dict_expressions[y])
+            dict_expressions[i][0] = clean_string(dict_expressions[i][0])
+
+
+            i-=1
 
         last_string = ""
         for i in range(len(self.states)):
