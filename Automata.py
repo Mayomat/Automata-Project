@@ -415,6 +415,7 @@ class Automata:
 
         # creation of the new automaton
         minimized_automaton = Automata()
+        print(minimized_automaton.initial)
         minimized_automaton.nb_initial = 1
         minimized_automaton.nb_states = len(groups)
         minimized_automaton.nb_alphabet = self.nb_alphabet
@@ -426,6 +427,7 @@ class Automata:
             for state in groups[i]:
                 if state.initial:
                     minimized_automaton.states[i].initial = True
+                    minimized_automaton.initial.append(state.num)
                 if state.terminal:
                     minimized_automaton.states[i].terminal = True
 

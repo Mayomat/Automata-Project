@@ -81,6 +81,7 @@ def main():
                         ex = ex.determine()
                         ex.display_table()
                         determined = True
+                        #print()
 
                 elif choice == 3:  # Standardize Automaton
                     if not build:
@@ -95,6 +96,7 @@ def main():
                     else:
                         ex = ex.minimize()
                         ex.display_table()
+                        determined = True
 
                 elif choice == 5:  # Recognize the word of the Automaton
                     if not build:
