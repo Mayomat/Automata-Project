@@ -465,7 +465,7 @@ class Automata:
 
     def create_automaton_from_regEx(self, expression):
         """
-        Create an automatoon giving a regular expression.
+        Create an automaton giving a regular expression.
         example : ab+c
         :param expression:
         :return:

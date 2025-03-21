@@ -196,7 +196,7 @@ def clean_string(s):
     # Cleaning the epsilon
     s = clean_epsilon(s)
 
-    #Cleaning the parentheses
+    # Cleaning the parentheses
     s = clean_parentheses(s)
     return s
 
