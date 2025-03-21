@@ -503,7 +503,7 @@ class Automata:
 
 
         for i in range(len(self.states)):
-            dict_expressions[i] = reutnites_list_of_string(dict_expressions[i], str(i))
+            dict_expressions[i] = reunites_list_of_string(dict_expressions[i], str(i))
 
             for y in range(len(dict_expressions[i])):
                 dict_expressions[i][y] = clean_string(dict_expressions[i][y])
@@ -539,7 +539,6 @@ def regEx_separation(expression):
     """
     # creation of the first state and a list of all the states
     states = []
-
 
     # This variable is here to know the whole alphabet so we can create the automaton later on
     nb_alphabet = 0
@@ -705,7 +704,7 @@ def followedRegEx(statesAlpha1, statesAlpha2):
     initTransitions = states2[0].transitions
     for state in states:
         if state.terminal:
-            state.terminal = states[0].terminal
+            state.terminal = states2[0].terminal
             for i in range(statesAlpha2[1]):
                 for transition in initTransitions[i]:
                     state.transitions[i].append(transition)

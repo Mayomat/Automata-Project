@@ -79,6 +79,10 @@ def parenthesis_in_regEx(expression):
     new_expression = "("
     i = 0
     while i < len(expression):
+        if expression[i] == "(":
+            new_expression+="("
+        if expression[i] == ")":
+            new_expression += ")"
         if expression[i] == "+":
             new_expression += ")+("
         else:
@@ -87,7 +91,7 @@ def parenthesis_in_regEx(expression):
     new_expression += ")"
     return new_expression
 
-def reutnites_list_of_string(regEx, value):
+def reunites_list_of_string(regEx, value):
     """
     transform the following list of string : ['1a', '1ab'] into '1(a+ab)'
     :param regEx: list of string
@@ -184,13 +188,13 @@ def clean_string(s):
     :return: string
     """
     # Cleaning the epsilon
-    s = clean_espilon(s)
+    s = clean_epsilon(s)
 
     #Cleaning the parentheses
     s = clean_parentheses(s)
     return s
 
-def clean_espilon(s):
+def clean_epsilon(s):
     new_string = ""
     for i in range(len(s)):
         if s[i] != "ε":
