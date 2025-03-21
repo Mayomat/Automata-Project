@@ -171,7 +171,12 @@ class Automata:
         print(f"Final states: {self.terminal}")
         print(f"Number of transitions: {self.nb_transition}")
         print(f"Alphabet size: {self.nb_alphabet}")
-        print("\nStates and Transitions:")
+        print(f"Alphabet :", end = " ")
+        for i in range(self.nb_alphabet):
+            print(alphabet[i], end =", ")
+
+
+        print("\n\nStates and Transitions:")
 
         for state in self.states:
             print(f"\nState {state.num}:")
@@ -184,7 +189,7 @@ class Automata:
                 if state.transitions[i]:
                     print(f"    {chr(ord('a') + i)} -> {state.transitions[i]}")
                 else :
-                    print("    No transitions")
+                    print(f"    {chr(ord('a') + i)} -> No transition")
 
         print("\nTransition Table:")
         self.display_table()
