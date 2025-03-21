@@ -464,7 +464,14 @@ class Automata:
             print()
 
     def create_automaton_from_regEx(self, expression):
+        """
+        Create an automatoon giving a regular expression.
+        example : ab+c
+        :param expression:
+        :return:
+        """
         expression = parenthesis_in_regEx(expression)
+        # The following lines are the most important, they call the recursive function creating the states and transitions
         if check_expression(expression):
             self.states, self.nb_alphabet = regEx_separation(expression)
         for state in self.states:
@@ -529,8 +536,7 @@ def regEx_separation(expression):
     # This variable is here to know the whole alphabet so we can create the automaton later on
     nb_alphabet = 0
 
-    # end of the recursion:
-    # We create two states : first one going to the second one with the transition
+    # end of the recursion: only one letter so 2 states -> state1 letter state2
     # the first one is marked as initial, the second as final
     # it will then be treated when going up in the recursion call
     if len(expression) == 1:
@@ -546,12 +552,12 @@ def regEx_separation(expression):
         states.append(final_state)
         return states, nb_alphabet
 
+
     # We now make a recursive call to create a list of states which are linked
     # First if we start with a letter we check the character after:
         # A letter or a parenthesis means a followed by
         # A + means it is a or with what is after
         # A * means it repeats itself
-
     if expression[0] in alphabet:
         #We create a new state which we add to list(states)
         initial_state = State(0)
@@ -566,15 +572,20 @@ def regEx_separation(expression):
         if get_index(expression[0]) +1 > nb_alphabet:
             nb_alphabet = get_index(expression[0]) +1
 
+        # If the letter is followed by another letter or a open parenthesis, we call the function followedRegEx which
+        # will merge the two lists of states making them follow each other
         if expression[1] in alphabet or expression[1] == '(':
             state, nb_alphabet = followedRegEx((states, nb_alphabet), regEx_separation(expression[1:]))
         else :
             if expression[1] == '*':
                 # If it is a *, we need to check if there is something after it or not
                 if len(expression) > 2:
+                    # If the '*' is followed by a letter or a '(', we make the followed by call but adding the starCall
+                    # inside the function. The star call will create a list of states which repeat itself
                     if expression[2] in alphabet or expression[2] == '(':
                         states, nb_alphabet = followedRegEx(starRegEx((states, nb_alphabet)), regEx_separation(expression[2:]))
                     else:
+                        # If it is a '+', we do the same but with the orRegEx function
                         if expression[2] == '+':
                             states, nb_alphabet = orRegEx(starRegEx((states, nb_alphabet)), regEx_separation(expression[3:]))
                 else :
@@ -585,8 +596,14 @@ def regEx_separation(expression):
                     return states, nb_alphabet
 
         if expression[1] == '+':
+            # if we get a simple '+', we make the or call between our letter and what follows the +
+            # For example, a+ab will create the states for a then call those inside the function with the recursive
+            # call of ab. In the recursive call, ab is treated as a 'a followed by b' by the function followedRegEx
             states, nb_alphabet = orRegEx((states, nb_alphabet), regEx_separation(expression[2:]))
 
+    # If we get a parenthesis, we get the end of the parenthesis and call the function on what's inside.
+    # For this we again check what is after to make the recursive call inside the function followRegEx or orRegEx
+    # It is the same logic as with only one letter
     if expression[0] == "(":
         y = 1
         nb_open = 1

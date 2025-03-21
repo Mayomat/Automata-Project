@@ -170,6 +170,8 @@ def develop_list(l):
 def replace(regEx, value, new_string):
     """
     Function to replace every string containing the value indicated by the new string
+    Example : 0 : ['aab']
+              1 : ['0a']   ---> 1 : ['aaba']
     :param regEx: list of string
     :param value: string representing the value to change
     :param value: new_string to change the value by
