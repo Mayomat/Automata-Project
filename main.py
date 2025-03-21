@@ -69,6 +69,7 @@ def main():
                         ex.display_table()
                         build = True
 
+
                     else:
                         print("Your automaton is already built, try another function")
 

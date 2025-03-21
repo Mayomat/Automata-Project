@@ -159,6 +159,34 @@ class Automata:
 
         print(delimiter.replace("A", "╚").replace("B", "╩").replace("C", "╝"))  # Final line
 
+    def display_automaton(self):
+        """
+        Display the automaton's states, transitions, and other relevant information.
+        """
+        print("Automaton Details:")
+        print(f"Number of states: {self.nb_states}")
+        print(f"Number of initial states: {self.nb_initial}")
+        print(f"Initial states: {self.initial}")
+        print(f"Number of final states: {self.nb_final}")
+        print(f"Final states: {self.terminal}")
+        print(f"Number of transitions: {self.nb_transition}")
+        print(f"Alphabet size: {self.nb_alphabet}")
+        print("\nStates and Transitions:")
+
+        for state in self.states:
+            print(f"\nState {state.num}:")
+            if state.initial:
+                print("  - Initial state")
+            if state.terminal:
+                print("  - Final state")
+            print("  Transitions:")
+            for i in range(self.nb_alphabet):
+                if state.transitions[i]:
+                    print(f"    {chr(ord('a') + i)} -> {state.transitions[i]}")
+
+        print("\nTransition Table:")
+        self.display_table()
+
     def is_complete(self):
         """
         function to detect if the automaton is complete or not
