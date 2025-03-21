@@ -119,7 +119,7 @@ class Automata:
             size_lst.append(elem)
             i += 1
 
-        size_state = 6 + len(str(self.nb_states))   # Size of the column State
+        size_state = 6 + len(str(self.nb_states))  # Size of the column State
 
         delimiter = "A" + "═════════" + "B" + "═"*size_state + "B"
         for nb in size_lst:
@@ -488,10 +488,11 @@ class Automata:
         for state in self.states:
             if state.initial:
                 self.initial.append(state.num)
-                self.nb_initial+=1
+                self.nb_initial += 1
             if state.terminal:
                 self.terminal.append(state.num)
-                self.nb_final+=1
+                self.nb_final += 1
+            self.nb_states += 1
 
     def getRegExExpression(self):
         dict_expressions = {}
