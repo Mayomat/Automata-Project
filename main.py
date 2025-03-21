@@ -1,5 +1,6 @@
 from Automata import *
 
+
 def print_menu():
     print("\n")
     print("╔════════════════════════════════════════════════════╗")
