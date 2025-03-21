@@ -1,6 +1,5 @@
 from Automata import *
 
-
 def print_menu():
     print("\n")
     print("╔════════════════════════════════════════════════════╗\n"
@@ -136,6 +135,7 @@ def main():
                     ex = Automata()
                     ex.create_automaton_from_regEx(input("Enter the desired regular expression :\n"))
                     ex.display_table()
+                    build = True
 
                 else:
                     print("Invalid input, please put a valid number")
