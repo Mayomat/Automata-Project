@@ -440,15 +440,19 @@ class Automata:
         return minimized_automaton
 
     def recognize_word(self, word):
+        """
+        Check if the word take in parameter is accepted by the automaton
+        return True or False
+        """
         determine_aut = self.determine()
         determine_aut.complete()
         current_state = determine_aut.states[determine_aut.initial[0]]
-        if word == " ":
-            if len(determine_aut.initial) == 0 or len(determine_aut.terminal) == 0:
+        if word == " ":  # Check if the word is the empty word
+            if len(determine_aut.initial) == 0 or len(determine_aut.terminal) == 0:  # It can't accept the empty word if there are no final or initial state
                 return False
 
             if len(determine_aut.initial) != 0 and len(determine_aut.terminal) != 0:
-                if determine_aut.initial[0] == determine_aut.terminal[0]:
+                if determine_aut.initial[0] == determine_aut.terminal[0]:  # The initial state is a terminal state
                     return True
         for letter in word:
             index_letter = get_index(letter)
@@ -462,11 +466,11 @@ class Automata:
     def word_recognition(self):
         print(f"The world is composed of the letters : ")
         for i in range(self.nb_alphabet):
-            print(alphabet[i], end=" ")
+            print(alphabet[i], end=" ")  # Display the alphabet of the automaton
         print()
         word = input("Enter a word according to the letters accepted by the automaton (Put 'end' to stop):")
         print()
-        while word != "end":
+        while word != "end":  # While the word 'end' is not enter, it continues to wait for a word
             if self.recognize_word(word):
                 print(f"The word {word} is recognized by the automaton ")
             else:
