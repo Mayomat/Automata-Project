@@ -1,10 +1,12 @@
 alphabet = "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z".split(",")
 digit = "0,1,2,3,4,5,6,7,8,9".split(",")
 
+
 def get_index(character):
     # Get the index associated to a letter (used in the transition table)
     # return the index found
     return ord(character) - ord('a')
+
 
 def compare_two_list_of_states(list1, list2):
     """
@@ -29,21 +31,23 @@ def display_group(group):
     :param group: list of state
     """
     print("[", end="")
-    for state in group :
+    for state in group:
         print(state.num, end=" ")
     print("]")
 
-def state_in_list(l, value):
+
+def state_in_list(lst, value):
     """
     check if a value is in a list of state
-    :param l: list of state
+    :param lst: list of state
     :param value: value to check
     :return:
     """
-    for state in l:
+    for state in lst:
         if state.num == value:
             return True
     return False
+
 
 def check_expression(expression):
     """
@@ -241,6 +245,4 @@ def clean_parentheses(s):
             y=i
         y+= 1
     return string_to_return
-
-
 

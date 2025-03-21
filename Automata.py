@@ -1,12 +1,11 @@
-from operator import truediv
-
 from usage import *
 from queue import *
+
 
 class State:
     def __init__(self, number):
         self.num = number
-        self.transitions = [[] for x in range(26)] # An array of 26 array listing all transitions
+        self.transitions = [[] for _ in range(26)]  # An array of 26 array listing all transitions
         self.initial = False
         self.terminal = False
 
@@ -27,14 +26,13 @@ class State:
         return same
 
 
-
 class Automata:
     def __init__(self):
-        self.initial = []     # array storing all the initial state
+        self.initial = []  # array storing all the initial state
         self.nb_initial = 0
-        self.terminal = []       # array storing all the final state
+        self.terminal = []  # array storing all the final state
         self.nb_final = 0
-        self.states = []      # array storing all states in the automata
+        self.states = []  # array storing all states in the automata
         self.nb_states = 0
         self.nb_alphabet = 0
         self.transition_table = []
@@ -102,60 +100,54 @@ class Automata:
     |  ---->  |   2   | 0     |     |  ---->   |
     ----------------------------------------------
     """
+
     def display_table(self):
-        nb_trans_lst = [self.max_transitions(i) for i in range(self.nb_alphabet)] #Get the max transition for each letter
+        nb_trans_lst = [self.max_transitions(i) for i in
+                        range(self.nb_alphabet)]  # Get the max transition for each letter
 
         # Modify the list into space taken for each column
         for i in range(len(nb_trans_lst)):
             if nb_trans_lst[i] == 1:
                 nb_trans_lst[i] = 5
             else:
-                nb_trans_lst[i] = 1+2*nb_trans_lst[i]
+                nb_trans_lst[i] = 1 + 2 * nb_trans_lst[i]
 
-        delimiter = "═" * (30 + sum(nb_trans_lst)+self.nb_alphabet) #30 for the fixed columns,init,state,term, computation for the transition
+        delimiter = "A" + "═════════" + "B" + "═══════" + "B"
+        for nb in nb_trans_lst:
+            delimiter += "═" * nb + "B"
+        delimiter += "══════════" + "C"
 
-        print(delimiter) # Line 1 : Header
+        print(delimiter.replace("A", "╔").replace("B", "╦").replace("C", "╗"))  # Line 1 : Header
 
         # Line 2 : Column title
         print("║ Initial ║ State ║", end="")
-        for i in range(self.nb_alphabet): # Every transitions
+        for i in range(self.nb_alphabet):  # Every transitions
             print(alphabet[i].center(nb_trans_lst[i], " "), end="║")
         print(" Terminal ║")
 
-        print(delimiter) # Line 3 : Delimiter
+        print(delimiter.replace("A", "╠").replace("B", "╬").replace("C", "╣"))  # Line 3 : Delimiter
 
-        for state in self.states: # Display each lines
+        for state in self.states:  # Display each lines
             # Display the initial column
             if state.initial:
-                print("║  ---->  ", end="") # If initial, print the arrow
+                print("║  ---->  ", end="")  # If initial, print the arrow
             else:
                 print("║         ", end="")
 
-            #Display the state number
-            print("║   "+str(state.num)+"   ║", end="")
+            # Display the state number
+            print("║   " + str(state.num) + "   ║", end="")
 
-            #Display the state transitions
+            # Display the state transitions
             for i in range(self.nb_alphabet):
-                print((",".join(str(s) for s in state.transitions[i])).center(nb_trans_lst[i], " "), end="|")
+                print((",".join(str(s) for s in state.transitions[i])).center(nb_trans_lst[i], " "), end="║")
 
             # Display the terminal column
             if state.terminal:
-                print("  ----->  |") # If terminal, print the arrow
+                print("  ----->  ║")  # If terminal, print the arrow
             else:
                 print("          ║")
 
-        print(delimiter) # Final line
-
-    def string_spaced(self, nb_space, elem):
-        # This shit don't work
-        # Want to create a function that compute the space for each values in the table to be beautiful based on the number of transition
-
-        if len(elem) == nb_space: return elem
-        string = " "
-        for i in range(nb_space - len(elem) - 1):
-            string += " "
-        string += elem
-        return elem
+        print(delimiter.replace("A", "╚").replace("B", "╩").replace("C", "╝"))  # Final line
 
     def is_complete(self):
         """
@@ -181,7 +173,6 @@ class Automata:
                     if len(state.transitions[i]) == 0:
                         state.transitions[i].append(garbage.num)
 
-
     def is_deterministic(self):
         """
         function to detect if the automaton is deterministic or not
@@ -194,7 +185,7 @@ class Automata:
             return False
         for state in self.states:
             for i in range(self.nb_alphabet):
-                if len(state.transitions[i]) >1:
+                if len(state.transitions[i]) > 1:
                     return False
         return True
 
@@ -271,18 +262,19 @@ class Automata:
                             # We then enqueue it to treat it after
                             determinization_queue.enqueue(new_state)
             return deter_automaton
+        print("The automaton is already determined")
         return self
 
     def is_standardized(self):
-        # check if standardized if
+        # check if standardized :
         # 1 initial state
         # no transition toward it
         # return a boolean
         if self.nb_initial != 1:
             return False
-        for state in self.states: # For every state in the automaton
-            for i in range(self.nb_alphabet): # Go through all transition of the state
-                if self.initial[0] in state.transitions[i]: # Check if the initial state is in any transition
+        for state in self.states:  # For every state in the automaton
+            for i in range(self.nb_alphabet):  # Go through all transition of the state
+                if self.initial[0] in state.transitions[i]:  # Check if the initial state is in any transition
                     return False
         return True
 
@@ -294,11 +286,12 @@ class Automata:
         """
 
         non_accessible_states = []
-        accessible_states = self.initial # List updating itself with accessible states, first accessible states are initial ones
+        accessible_states = self.initial  # List updating itself with accessible states
         for state in accessible_states:
-            for i in range(self.nb_alphabet): # For every possible transition
-                for next_state in self.states[state].transitions[i]: # If a transition exists to a non accessed state then the state is accessible
-                    if next_state not in accessible_states: # If we did not already visit it, add it to accessible states
+            for i in range(self.nb_alphabet):  # For every possible transition
+                # If a transition exists to a non accessed state then the state is accessible
+                for next_state in self.states[state].transitions[i]:
+                    if next_state not in accessible_states:  # If we did not visit it, add it to accessible states
                         accessible_states.append(self.states[next_state].num)
 
         # Save the non-accessible states
@@ -315,29 +308,39 @@ class Automata:
         """
         # Combine every initial states transitions into a new initial state
         if self.is_standardized():
+            print("The automaton is already standardized")
             return
-        init_state = State(self.nb_states) #New initial state
+        init_state = State(self.nb_states)  # New initial state
         init_state.initial = True
         self.nb_states += 1
         self.nb_initial = 1
-        #For each transition in each initial state
+        # For each transition in each initial state
         for state in self.initial:
+
             self.states[state].initial = False  # Remove the initial attribute from the state
             for i in range(self.nb_alphabet):
                 for transition in self.states[state].transitions[i]:
                     if transition not in init_state.transitions[i]:
-                        init_state.transitions[i].append(transition) #We add to the new initial state each transition
+                        init_state.transitions[i].append(transition)  # We add to the new initial state each transition
                         self.nb_transition += 1
-        self.states.append(init_state)# Add the new states into the automaton's state list
-        self.initial = [init_state.num] # Change the automaton's initial state list to our new initial state
+        self.states.append(init_state)  # Add the new states into the automaton's state list
+        self.initial = [init_state.num]  # Change the automaton's initial state list to our new initial state
 
+    def complementary(self):    # Changes the Automaton to its complementary
+        self.complete()
+        self.terminal = []
+        for state in self.states:
+            state.terminal = not state.terminal
+            if state.terminal:
+                self.terminal.append(state)
+        self.nb_final = len(self.terminal)
 
     def minimize(self):
         """
         To minimize : determine, complete, check there are no non-accessible states
         :return: automata
         """
-        automaton = self.determine() # we determine --> there are no non-accessible state
+        automaton = self.determine()  # we determine --> there are no non-accessible state
 
         automaton.complete()
 
@@ -348,8 +351,6 @@ class Automata:
                 groups[0].append(state)
             else:
                 groups[1].append(state)
-
-
 
         # this boolean is put to true when after a step we still have the same groups
         stop = False
@@ -393,7 +394,7 @@ class Automata:
             stop = True
             for new_group in new_groups:
                 found = False
-                for group in groups :
+                for group in groups:
                     if compare_two_list_of_states(new_group, group):
                         found = True
                         break
@@ -412,7 +413,6 @@ class Automata:
             minimized_automaton.states.append(groups[i][0])
             minimized_automaton.states[i].num = i
 
-
         for i in range(len(groups)):
             for state in groups[i]:
                 if state.initial:
@@ -428,36 +428,22 @@ class Automata:
         minimized_automaton.nb_transition = minimized_automaton.nb_states * minimized_automaton.nb_alphabet
         return minimized_automaton
 
-    def display_automaton_text(automaton):
-        """Display the automaton as a text-based diagram."""
-        print("Automaton Diagram:")
-        for state in automaton.states:
-            # Draw the state
-            if state.initial:
-                print("-->", end=" ")
-            else:
-                print("   ", end=" ")
-            print(f"({state.num})", end=" ")
-            if state.terminal:
-                print("<--", end=" ")
-            print()
-
-            # Draw transitions
-            for i in range(automaton.nb_alphabet):
-                if state.transitions[i]:
-                    print(f"    {chr(ord('a') + i)} -> {state.transitions[i]}")
-
-
     def recognize_word(self, word):
         determine_aut = self.determine()
         determine_aut.complete()
         current_state = determine_aut.states[determine_aut.initial[0]]
+        if word == " ":
+            if len(determine_aut.initial) == 0 or len(determine_aut.terminal) == 0:
+                return False
+
+            if len(determine_aut.initial) != 0 and len(determine_aut.terminal) != 0:
+                if determine_aut.initial[0] == determine_aut.terminal[0]:
+                    return True
         for letter in word:
             index_letter = get_index(letter)
             if index_letter > determine_aut.nb_alphabet:  # Check that the letter is accepted by the automaton
                 print("One letter is not taken by automaton ")
                 return False
-
             else:
                 current_state = determine_aut.states[current_state.transitions[index_letter][0]]  # Next state to check
         return current_state.terminal
@@ -467,14 +453,14 @@ class Automata:
         for i in range(self.nb_alphabet):
             print(alphabet[i], end=" ")
         print()
-        word = input("Enter a word according to the letters accepted by the automaton (Put 'end' to stop) :")
+        word = input("Enter a word according to the letters accepted by the automaton (Put 'end' to stop):")
         print()
         while word != "end":
             if self.recognize_word(word):
-                print(f"The word {word} is recognize by the automaton ")
+                print(f"The word {word} is recognized by the automaton ")
             else:
-                print(f"The word {word} is NOT recognize by the automaton ")
-            word = input("Enter a word according to the letters accepted by the automaton: (Put 'end' to stop)")
+                print(f"The word {word} is NOT recognized by the automaton ")
+            word = input("Enter a word according to the letters accepted by the automaton (Put 'end' to stop):")
             print()
 
     def create_automaton_from_regEx(self, expression):
