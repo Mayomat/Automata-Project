@@ -1,10 +1,12 @@
 alphabet = "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z".split(",")
 digit = "0,1,2,3,4,5,6,7,8,9".split(",")
 
+
 def get_index(character):
     # Get the index associated to a letter (used in the transition table)
     # return the index found
     return ord(character) - ord('a')
+
 
 def compare_two_list_of_states(list1, list2):
     """
@@ -29,21 +31,23 @@ def display_group(group):
     :param group: list of state
     """
     print("[", end="")
-    for state in group :
+    for state in group:
         print(state.num, end=" ")
     print("]")
 
-def state_in_list(l, value):
+
+def state_in_list(lst, value):
     """
     check if a value is in a list of state
-    :param l: list of state
+    :param lst: list of state
     :param value: value to check
     :return:
     """
-    for state in l:
+    for state in lst:
         if state.num == value:
             return True
     return False
+
 
 def check_expression(expression):
     """
@@ -79,6 +83,10 @@ def parenthesis_in_regEx(expression):
     new_expression = "("
     i = 0
     while i < len(expression):
+        if expression[i] == "(":
+            new_expression+="("
+        if expression[i] == ")":
+            new_expression += ")"
         if expression[i] == "+":
             new_expression += ")+("
         else:
@@ -87,7 +95,7 @@ def parenthesis_in_regEx(expression):
     new_expression += ")"
     return new_expression
 
-def reutnites_list_of_string(regEx, value):
+def reunites_list_of_string(regEx, value):
     """
     transform the following list of string : ['1a', '1ab'] into '1(a+ab)'
     :param regEx: list of string
@@ -184,13 +192,13 @@ def clean_string(s):
     :return: string
     """
     # Cleaning the epsilon
-    s = clean_espilon(s)
+    s = clean_epsilon(s)
 
     #Cleaning the parentheses
     s = clean_parentheses(s)
     return s
 
-def clean_espilon(s):
+def clean_epsilon(s):
     new_string = ""
     for i in range(len(s)):
         if s[i] != "ε":
@@ -237,6 +245,4 @@ def clean_parentheses(s):
             y=i
         y+= 1
     return string_to_return
-
-
 

@@ -3,104 +3,132 @@ from Automata import *
 
 def print_menu():
     print("\n")
-    print("╔════════════════════════════════════════════════════╗")
-    print("║                AUTOMATON CONSOLE MENU              ║")
-    print("╠════════════════════════════════════════════════════╣")
-    print("║ 0: Build the Automaton                             ║")
-    print("║ 1: Determine the Automaton                         ║")
-    print("║ 2: Standardize Automaton                           ║")
-    print("║ 3: Minimize the Automaton                          ║")
-    print("║ 4: Recognize the word of the Automaton             ║")
-    print("║ 5: Search if the Automaton recognize the inputed   ║")
-    print("║ 6: Output the max Transitions from State 1         ║")
-    print("║ 7: Return to the automaton selection               ║")
-    print("╚════════════════════════════════════════════════════╝")
+    print("╔════════════════════════════════════════════════════╗\n"
+          "║               AUTOMATON CONSOLE MENU               ║\n"
+          "╠════════════════════════════════════════════════════╣\n"
+          "║ 0: Return to the automaton selection               ║\n"
+          "║ 1: Build the Automaton                             ║\n"
+          "║ 2: Determine the Automaton                         ║\n"
+          "║ 3: Standardize Automaton                           ║\n"
+          "║ 4: Minimize the Automaton                          ║\n"
+          "║ 5: Recognize the word of the Automaton             ║\n"
+          "║ 6: Check if the Automaton recognise your input     ║\n"
+          "║ 7: Output the max Transitions from State 1         ║\n"
+          "║ 8: Give the complementary of the Automaton         ║\n"
+          "╚════════════════════════════════════════════════════╝\n")
+
 
 def main():
     ex = Automata()
 
     while True:
 
-        # Here we create variables and not use is_deterministic or else to check the automata otherwise it will create error checking
+        # Here we create variables and not use is_deterministic or else to check the automata
+        # otherwise it will create error checking
         # something that is not build
-        Build = False
-        Determined = False
+        build = False
+        determined = False
 
-        print("╔════════════════════════════════════════════════════╗")
-        print("║                AUTOMATON CONSOLE MENU              ║")
-        print("╠════════════════════════════════════════════════════╣")
-        print("║ Enter the number of the automaton that you want,   ║")
-        print("║ From 1 to 44 and O to exit                         ║")
-        print("╚════════════════════════════════════════════════════╝")
+        print("╔════════════════════════════════════════════════════╗\n"
+              "║               AUTOMATON CONSOLE MENU               ║\n"
+              "╠════════════════════════════════════════════════════╣\n"
+              "║ Enter the number of the automaton that you want,   ║\n"
+              "║ From 1 to 44 and O to exit                         ║\n"
+              "╚════════════════════════════════════════════════════╝\n")
 
-        choice = int(input("Enter your choice: "))
-        if choice > 0 and choice < 45:
-            path = "Finite_Automata_files/"+str(choice)+".txt"
-        elif choice == 0:
-            print("╔════════════════════════════════════════════════════╗")
-            print("║                     ByeBye                         ║")
-            print("╚════════════════════════════════════════════════════╝")
-            break
-        else:
-            print("Invalid input. Please enter a number.")
-        while True:
-            print_menu()
-            choice = int(input("Enter your choice: "))
-
-
-            if choice == 0:
-                if Build==False:
-                    ex.create_automaton_from_file(path)
-                    ex.display_table()
-                    Build = True
-
-                else:
-                    print("Your automaton is already built, try another function")
-
-            elif choice == 1:
-                if not Build:
-                    print("Please first Build the Automata")
-                else:
-                    print("In order to determine the automaton, and for technical purposes, we changed the name of the states, the new automata states and old one are not linked by their names")
-                    ex = ex.determine()
-                    ex.display_table()
-                    Determined = True
-            elif choice == 2:
-                if not Determined:
-                    print("Please first Determine the Automata")
-                else:
-                    ex.standardize()
-                    ex.display_table()
-            elif choice == 3 and Determined:
-                if not Determined:
-                    print("Please first Determine the Automata")
-                else:
-                    ex.minimize()
-                    ex.display_table()
-            elif choice == 4:
-                if not Build or not Determined:
-                    print("Please first build or determine the automata")
-                else :
-                    word = input("What word do you want to be tested in the automata : ")
-                    if ex.recognize_word(word):
-                        print("Yes the Automata recognized the word " + word)
-                    else:
-                        print("No the Automata does not recognized the word" + word)
-            elif choice == 5:
-                if not Build or not Determined:
-                    print("Please first build or determine the automata")
-                else :
-                    ex.word_recognition()
-            elif choice == 6:
-                if not Build or not Determined:
-                    print("Please first build or determine the automata")
-                else :
-                    print(f"Result: {ex.max_transitions(1)}")
-            elif choice == 7:
-                ex = Automata() # mandatory, or else the memory keeps the previous automata in memory
+        choice = input("Enter your choice: ")
+        if choice.isdigit():
+            choice = int(choice)
+            if 0 < choice < 45:
+                path = "Finite_Automata_files/" + str(choice) + ".txt"
+            elif choice == 0:
+                print("╔════════════════════════════════════════════════════╗\n"
+                      "║                       ByeBye                       ║\n"
+                      "╚════════════════════════════════════════════════════╝\n")
                 break
             else:
-                print("Invalid input. Please enter a number.")
+                print("Invalid input, please put a valid number")
+                continue
+        else:
+            print("Invalid input, please put a valid number")
+            continue
+
+        while True:
+            print_menu()
+            choice = input("Enter your choice: ")
+            if choice.isdigit():
+                choice = int(choice)
+                if choice == 0:  # Returns to the automaton selection
+                    ex = Automata()  # mandatory, or else the memory keeps the previous automata in memory
+                    break
+
+                elif choice == 1:  # Build the Automaton
+                    if not build:
+                        ex.create_automaton_from_file(path)
+                        ex.display_table()
+                        build = True
+
+                    else:
+                        print("Your automaton is already built, try another function")
+
+                elif choice == 2:  # Determine the Automaton
+                    if not build:
+                        print("Please first build the Automata")
+                    else:
+                        print("In order to determine the automaton, and for technical purposes, we changed the name\n"
+                              "of the states, the new automata states and old one are not linked by their names")
+                        ex = ex.determine()
+                        ex.display_table()
+                        determined = True
+
+                elif choice == 3:  # Standardize Automaton
+                    if not build:
+                        print("Please first build the Automata")
+                    else:
+                        ex.standardize()
+                        ex.display_table()
+
+                elif choice == 4:  # Minimize the Automaton
+                    if not build:
+                        print("Please first build the Automata")
+                    else:
+                        ex = ex.minimize()
+                        ex.display_table()
+
+                elif choice == 5:  # Recognize the word of the Automaton
+                    if not build:
+                        print("Please first build the automata")
+                    else:
+                        word = input("What word do you want to be tested in the automata : ")
+                        if ex.recognize_word(word):
+                            print("Yes the Automata recognized the word " + word)
+                        else:
+                            print("No the Automata does not recognized the word" + word)
+
+                elif choice == 6:  # Check if the Automaton recognise your input
+                    if not build:
+                        print("Please first build or determine the automata")
+                    else:
+                        ex.word_recognition()
+
+                elif choice == 7:   # Output the max Transitions from State 1
+                    if not build or not determined:
+                        print("Please first build or determine the automata")
+                    else:
+                        print(f"Result: {ex.max_transitions(1)}")
+
+                elif choice == 8:   # Give complementary of the Automaton
+                    if not build:
+                        print("Please first build the automata")
+                    else:
+                        ex.complementary()
+                        ex.display_table()
+                else:
+                    print("Invalid input, please put a valid number")
+                print("Press Enter to continue")
+                input()
+            else:
+                print("Invalid input, please put a valid number")
 
 
 if __name__ == "__main__":
