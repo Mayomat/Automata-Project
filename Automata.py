@@ -159,6 +159,40 @@ class Automata:
 
         print(delimiter.replace("A", "╚").replace("B", "╩").replace("C", "╝"))  # Final line
 
+    def display_automaton(self):
+        """
+        Display the automaton's states, transitions, and other relevant information.
+        """
+        print("Automaton Details:")
+        print(f"Number of states: {self.nb_states}")
+        print(f"Number of initial states: {self.nb_initial}")
+        print(f"Initial states: {self.initial}")
+        print(f"Number of final states: {self.nb_final}")
+        print(f"Final states: {self.terminal}")
+        print(f"Number of transitions: {self.nb_transition}")
+        print(f"Alphabet size: {self.nb_alphabet}")
+        print(f"Alphabet :", end = " ")
+        for i in range(self.nb_alphabet):
+            print(alphabet[i], end=", " if i != self.nb_alphabet - 1 else " ")
+
+        print("\n\nStates and Transitions:")
+
+        for state in self.states:
+            print(f"\nState {state.num}:")
+            if state.initial:
+                print("  - Initial state")
+            if state.terminal:
+                print("  - Final state")
+            print("  Transitions:")
+            for i in range(self.nb_alphabet):
+                if state.transitions[i]:
+                    print(f"    {chr(ord('a') + i)} -> {state.transitions[i]}")
+                else :
+                    print(f"    {chr(ord('a') + i)} -> No transition")
+
+        print("\nTransition Table:")
+        self.display_table()
+
     def is_complete(self):
         """
         function to detect if the automaton is complete or not
@@ -475,7 +509,7 @@ class Automata:
         """
         print("We first check if our automaton is determined, else we determine it")
         determine_aut = self.determine()
-        print("we do the same to complete it")
+        print("\nWe do the same to complete it")
         determine_aut.complete()
         current_state = determine_aut.states[determine_aut.initial[0]]
         if word == " ":  # Check if the word is the empty word
@@ -487,7 +521,7 @@ class Automata:
                     return True
         for letter in word:
             index_letter = get_index(letter)
-            if index_letter > determine_aut.nb_alphabet:  # Check that the letter is accepted by the automaton
+            if index_letter > determine_aut.nb_alphabet-1:  # Check that the letter is accepted by the automaton
                 print("One letter is not taken by automaton ")
                 return False
             else:
