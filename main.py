@@ -10,12 +10,15 @@ def print_menu():
           "║ 2: Determine the Automaton                         ║\n"
           "║ 3: Standardize Automaton                           ║\n"
           "║ 4: Minimize the Automaton                          ║\n"
-          "║ 5: Recognize the word of the Automaton             ║\n"
-          "║ 6: Check if the Automaton recognise your input     ║\n"
-          "║ 7: Output the max Transitions from State 1         ║\n"
-          "║ 8: Give the complementary of the Automaton         ║\n"
-          "║ 9: Give the regular expression of the Automaton    ║\n"
-          "║ 10: Get automaton from regular expression          ║\n"
+          "║ 5: Test if deterministic                           ║\n"
+          "║ 6: Test if complete                                ║\n"
+          "║ 7: Test if standardized                            ║\n"
+          "║ 8: Recognize the word of the Automaton             ║\n"
+          "║ 9: Check if the Automaton recognise your input     ║\n"
+          "║ 10: Output the max Transitions from State 1        ║\n"
+          "║ 11: Give the complementary of the Automaton        ║\n"
+          "║ 12: Give the regular expression of the Automaton   ║\n"
+          "║ 13: Get automaton from regular expression          ║\n"
           "╚════════════════════════════════════════════════════╝\n")
 
 
@@ -83,7 +86,6 @@ def main():
                         ex = ex.determine()
                         ex.display_automaton()
                         determined = True
-                        #print()
 
                 elif choice == 3:  # Standardize Automaton
                     if not build:
@@ -100,7 +102,25 @@ def main():
                         ex.display_automaton()
                         determined = True # same as built, else it superposed itself
 
-                elif choice == 5:  # Recognize the word of the Automaton
+                elif choice == 5:   # Test if deterministic
+                    if not build:
+                        print("Please first build the Automaton")
+                    else:
+                        ex.is_deterministic()
+
+                elif choice == 6:   # Test if complete
+                    if not build:
+                        print("Please first build the Automaton")
+                    else:
+                        ex.is_complete()
+
+                elif choice == 7:   # Test if standardized
+                    if not build:
+                        print("Please first build the")
+                    else:
+                        ex.is_standardized()
+
+                elif choice == 8:  # Recognize the word of the Automaton
                     if not build:
                         print("Please first build the automaton")
                     else:
@@ -110,32 +130,32 @@ def main():
                         else:
                             print("No the Automaton does not recognized the word" + word)
 
-                elif choice == 6:  # Check if the Automaton recognise your input
+                elif choice == 9:  # Check if the Automaton recognise your input
                     if not build:
                         print("Please first build or determine the automaton")
                     else:
                         ex.word_recognition()
 
-                elif choice == 7:   # Output the max Transitions from State 1
+                elif choice == 10:   # Output the max Transitions from State 1
                     if not build or not determined:
                         print("Please first build or determine the automaton")
                     else:
                         print(f"Result: {ex.max_transitions(1)}")
 
-                elif choice == 8:   # Give complementary of the Automaton
+                elif choice == 11:   # Give complementary of the Automaton
                     if not build:
                         print("Please first build the automaton")
                     else:
                         ex.complementary()
                         ex.display_automaton()
 
-                elif choice == 9:
+                elif choice == 12:
                     if not build:
                         print("Please first build the automaton")
                     else:
                         print("Automaton regEx : "+ex.getRegExExpression())
 
-                elif choice == 10:
+                elif choice == 13:
                     ex = Automata()
                     ex.create_automaton_from_regEx(input("Enter the desired regular expression :\n"))
                     ex.display_automaton()

@@ -201,6 +201,9 @@ class Automata:
         for state in self.states:
             for i in range(self.nb_alphabet):
                 if len(state.transitions[i]) == 0:
+                    # error message when not complete
+                    print(f"The state '{state.num}' has a no transition for '{alphabet[i]}' so it's not complete.")
+                    print("We can stop here and don't have to check for other missing transitions")
                     return False
         return True
 
@@ -226,11 +229,16 @@ class Automata:
         :return: bool
         """
         if self.nb_initial > 1:
+            # error message when more than 1 initial state
+            print(f"The automaton is not deterministic because there is {self.nb_initial} initial states")
             return False
         for state in self.states:
             for i in range(self.nb_alphabet):
                 if len(state.transitions[i]) > 1:
+                    # error message when ambiguity
+                    print(f" The automaton is not deterministic because the state {state.num} is ambiguous with the letter {i}")
                     return False
+        print("The automaton is deterministic")
         return True
 
     def determine(self):
@@ -314,11 +322,14 @@ class Automata:
         # no transition toward it
         # return a boolean
         if self.nb_initial != 1:
+            print(f"The automaton is not standardized because there is {self.nb_initial} initial states")
             return False
         for state in self.states:  # For every state in the automaton
             for i in range(self.nb_alphabet):  # Go through all transition of the state
                 if self.initial[0] in state.transitions[i]:  # Check if the initial state is in any transition
+                    print(f"The automaton is not standardized because the state {i} has an transition toward the initial state with '{alphabet[i]}'")
                     return False
+        print(f"The automaton is standardized")
         return True
 
     def find_non_accessible_states(self):
@@ -395,8 +406,20 @@ class Automata:
             else:
                 groups[1].append(state)
 
+        # Display the partition of Terminal States and Non-Terminal States
+        print("Partition 1:")
+        print("Group 1: Terminal States")
+        for state in groups[0]:
+            print(f" - State {state.num} (Terminal)")
+        print("\nGroup 2: Non-Terminal States")
+        for state in groups[1]:
+            print(f" - State {state.num} (Non-Terminal)")
+
+
         # this boolean is put to true when after a step we still have the same groups
         stop = False
+        # variables to count the number of partition
+        partition = 1
         # loop running until every group is in list(reunited)
         while not stop:
             # We create a new list group which we'll compare to the old list groups
@@ -432,6 +455,13 @@ class Automata:
                 # if the state can not be grouped, we create a new group
                 if not found:
                     new_groups.append([state])
+            print(f"\nPartition {partition}:", end="")
+            for i in range(len(new_groups)):
+                print(f"\nGroup {i}:\n - State", end="")
+                for state in new_groups[i]:
+                    print(f" {state.num}", end="")
+            print("")
+            partition += 1
 
             # compare new_groups with groups to see if it changed
             stop = True
@@ -449,7 +479,6 @@ class Automata:
 
         # creation of the new automaton
         minimized_automaton = Automata()
-        print(minimized_automaton.initial)
         minimized_automaton.nb_initial = 1
         minimized_automaton.nb_states = len(groups)
         minimized_automaton.nb_alphabet = self.nb_alphabet
@@ -478,7 +507,9 @@ class Automata:
         Check if the word take in parameter is accepted by the automaton
         return True or False
         """
+        print("We first check if our automaton is determined, else we determine it")
         determine_aut = self.determine()
+        print("we do the same to complete it")
         determine_aut.complete()
         current_state = determine_aut.states[determine_aut.initial[0]]
         if word == " ":  # Check if the word is the empty word
