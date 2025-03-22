@@ -592,7 +592,6 @@ class Automata:
                 dict_expressions[y] = replace(dict_expressions[y], str(i), dict_expressions[i])
                 dict_expressions[y] = develop_list(dict_expressions[y])
 
-
         #check there are no number left
         i = len(self.states) -1
         while i>-1:
@@ -610,6 +609,8 @@ class Automata:
                 for text in dict_expressions[i]:
                     last_string = last_string + text +"+"
         last_string = last_string[:-1]
+        if len(self.terminal) == 0 :
+            last_string = "There are no terminal states"
         return last_string
 
 
