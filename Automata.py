@@ -167,6 +167,7 @@ class Automata:
         for state in self.states:
             for i in range(self.nb_alphabet):
                 if len(state.transitions[i]) == 0:
+                    print(f" The automaton is not complete because the state {state} is empty")
                     return False
         return True
 
