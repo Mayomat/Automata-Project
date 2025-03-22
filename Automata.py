@@ -285,11 +285,14 @@ class Automata:
         # no transition toward it
         # return a boolean
         if self.nb_initial != 1:
+            print(f"The automaton is not standardized because there is {self.nb_initial} initial states")
             return False
         for state in self.states:  # For every state in the automaton
             for i in range(self.nb_alphabet):  # Go through all transition of the state
                 if self.initial[0] in state.transitions[i]:  # Check if the initial state is in any transition
+                    print(f"The automaton is not standardized because the state {i} has an transition toward the initial state with '{alphabet[i]}'")
                     return False
+        print(f"The automaton is standardized")
         return True
 
     def find_non_accessible_states(self):
