@@ -312,6 +312,10 @@ class Automata:
                             deter_automaton.nb_states += 1
                             # We then enqueue it to treat it after
                             determinization_queue.enqueue(new_state)
+
+            for key in dict_links.keys():
+                print("The state "+ str(key) + " represent the old states ", end="")
+                print(dict_links[key])
             return deter_automaton
         print("The automaton is already determined")
         return self
