@@ -12,12 +12,13 @@ def print_menu():
           "║ 4: Minimize the Automaton                          ║\n"
           "║ 5: Test if deterministic                           ║\n"
           "║ 6: Test if complete                                ║\n"
-          "║ 7: Recognize the word of the Automaton             ║\n"
-          "║ 8: Check if the Automaton recognise your input     ║\n"
-          "║ 9: Output the max Transitions from State 1         ║\n"
-          "║ 10: Give the complementary of the Automaton        ║\n"
-          "║ 11: Give the regular expression of the Automaton   ║\n"
-          "║ 12: Get automaton from regular expression          ║\n"
+          "║ 7: Test if standardized                            ║\n"
+          "║ 8: Recognize the word of the Automaton             ║\n"
+          "║ 9: Check if the Automaton recognise your input     ║\n"
+          "║ 10: Output the max Transitions from State 1        ║\n"
+          "║ 11: Give the complementary of the Automaton        ║\n"
+          "║ 12: Give the regular expression of the Automaton   ║\n"
+          "║ 13: Get automaton from regular expression          ║\n"
           "╚════════════════════════════════════════════════════╝\n")
 
 
@@ -83,7 +84,6 @@ def main():
                         ex = ex.determine()
                         ex.display_table()
                         determined = True
-                        #print()
 
                 elif choice == 3:  # Standardize Automaton
                     if not build:
@@ -106,13 +106,19 @@ def main():
                     else:
                         ex.is_deterministic()
 
-                elif choice == 6:
+                elif choice == 6:   # Test if complete
                     if not build:
                         print("Please first build the Automaton")
                     else:
                         ex.is_complete()
 
-                elif choice == 7:  # Recognize the word of the Automaton
+                elif choice == 7:   # Test if standardized
+                    if not build:
+                        print("Please first build the")
+                    else:
+                        ex.is_standardized()
+
+                elif choice == 8:  # Recognize the word of the Automaton
                     if not build:
                         print("Please first build the automaton")
                     else:
@@ -122,32 +128,32 @@ def main():
                         else:
                             print("No the Automaton does not recognized the word" + word)
 
-                elif choice == 8:  # Check if the Automaton recognise your input
+                elif choice == 9:  # Check if the Automaton recognise your input
                     if not build:
                         print("Please first build or determine the automaton")
                     else:
                         ex.word_recognition()
 
-                elif choice == 9:   # Output the max Transitions from State 1
+                elif choice == 10:   # Output the max Transitions from State 1
                     if not build or not determined:
                         print("Please first build or determine the automaton")
                     else:
                         print(f"Result: {ex.max_transitions(1)}")
 
-                elif choice == 10:   # Give complementary of the Automaton
+                elif choice == 11:   # Give complementary of the Automaton
                     if not build:
                         print("Please first build the automaton")
                     else:
                         ex.complementary()
                         ex.display_table()
 
-                elif choice == 11:
+                elif choice == 12:
                     if not build:
                         print("Please first build the automaton")
                     else:
                         print("Automaton regEx : "+ex.getRegExExpression())
 
-                elif choice == 12:
+                elif choice == 13:
                     ex = Automata()
                     ex.create_automaton_from_regEx(input("Enter the desired regular expression :\n"))
                     ex.display_table()
