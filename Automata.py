@@ -167,7 +167,6 @@ class Automata:
         for state in self.states:
             for i in range(self.nb_alphabet):
                 if len(state.transitions[i]) == 0:
-                    print(f" The automaton is not complete because the state {state} is empty")
                     return False
         return True
 
@@ -193,11 +192,14 @@ class Automata:
         :return: bool
         """
         if self.nb_initial > 1:
+            print(f"The automaton is not deterministic because there is {self.nb_initial} initial states")
             return False
         for state in self.states:
             for i in range(self.nb_alphabet):
                 if len(state.transitions[i]) > 1:
+                    print(f" The automaton is not deterministic because the state {state.num} is ambiguous whith the letter {i}")
                     return False
+        print("The automaton is deterministic")
         return True
 
     def determine(self):

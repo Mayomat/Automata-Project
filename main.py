@@ -99,7 +99,8 @@ def main():
                         ex = ex.minimize()
                         ex.display_table()
                         determined = True
-                elif choice == 5:
+
+                elif choice == 5:   # Test if deterministic
                     if not build:
                         print("Please first build the Automaton")
                     else:
