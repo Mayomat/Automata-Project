@@ -167,6 +167,8 @@ class Automata:
         for state in self.states:
             for i in range(self.nb_alphabet):
                 if len(state.transitions[i]) == 0:
+                    print(f"The state '{state.num}' has a no transition for '{alphabet[i]}' so it's not complete.")
+                    print("We can stop here and don't have to check for other missing transitions")
                     return False
         return True
 
