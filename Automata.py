@@ -455,7 +455,9 @@ class Automata:
         Check if the word take in parameter is accepted by the automaton
         return True or False
         """
+        print("We first check if our automaton is determined, else we determine it")
         determine_aut = self.determine()
+        print("we do the same to complete it")
         determine_aut.complete()
         current_state = determine_aut.states[determine_aut.initial[0]]
         if word == " ":  # Check if the word is the empty word
