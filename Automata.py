@@ -509,7 +509,7 @@ class Automata:
         """
         print("We first check if our automaton is determined, else we determine it")
         determine_aut = self.determine()
-        print("we do the same to complete it")
+        print("\nWe do the same to complete it")
         determine_aut.complete()
         current_state = determine_aut.states[determine_aut.initial[0]]
         if word == " ":  # Check if the word is the empty word
@@ -521,7 +521,7 @@ class Automata:
                     return True
         for letter in word:
             index_letter = get_index(letter)
-            if index_letter > determine_aut.nb_alphabet:  # Check that the letter is accepted by the automaton
+            if index_letter > determine_aut.nb_alphabet-1:  # Check that the letter is accepted by the automaton
                 print("One letter is not taken by automaton ")
                 return False
             else:
