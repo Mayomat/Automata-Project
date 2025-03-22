@@ -372,8 +372,20 @@ class Automata:
             else:
                 groups[1].append(state)
 
+        # Display the partition of Terminal States and Non-Terminal States
+        print("Partition 1:")
+        print("Group 1: Terminal States")
+        for state in groups[0]:
+            print(f" - State {state.num} (Terminal)")
+        print("\nGroup 2: Non-Terminal States")
+        for state in groups[1]:
+            print(f" - State {state.num} (Non-Terminal)")
+
+
         # this boolean is put to true when after a step we still have the same groups
         stop = False
+        # variables to count the number of partition
+        partition = 1
         # loop running until every group is in list(reunited)
         while not stop:
             # We create a new list group which we'll compare to the old list groups
@@ -409,6 +421,13 @@ class Automata:
                 # if the state can not be grouped, we create a new group
                 if not found:
                     new_groups.append([state])
+            print(f"\nPartition {partition}:", end="")
+            for i in range(len(new_groups)):
+                print(f"\nGroup {i}:\n - State", end="")
+                for state in new_groups[i]:
+                    print(f" {state.num}", end="")
+            print("")
+            partition += 1
 
             # compare new_groups with groups to see if it changed
             stop = True
@@ -426,7 +445,6 @@ class Automata:
 
         # creation of the new automaton
         minimized_automaton = Automata()
-        print(minimized_automaton.initial)
         minimized_automaton.nb_initial = 1
         minimized_automaton.nb_states = len(groups)
         minimized_automaton.nb_alphabet = self.nb_alphabet
