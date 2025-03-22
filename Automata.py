@@ -167,6 +167,7 @@ class Automata:
         for state in self.states:
             for i in range(self.nb_alphabet):
                 if len(state.transitions[i]) == 0:
+                    # error message when not complete
                     print(f"The state '{state.num}' has a no transition for '{alphabet[i]}' so it's not complete.")
                     print("We can stop here and don't have to check for other missing transitions")
                     return False
@@ -194,12 +195,14 @@ class Automata:
         :return: bool
         """
         if self.nb_initial > 1:
+            # error message when more than 1 initial state
             print(f"The automaton is not deterministic because there is {self.nb_initial} initial states")
             return False
         for state in self.states:
             for i in range(self.nb_alphabet):
                 if len(state.transitions[i]) > 1:
-                    print(f" The automaton is not deterministic because the state {state.num} is ambiguous whith the letter {i}")
+                    # error message when ambiguity
+                    print(f" The automaton is not deterministic because the state {state.num} is ambiguous with the letter {i}")
                     return False
         print("The automaton is deterministic")
         return True
