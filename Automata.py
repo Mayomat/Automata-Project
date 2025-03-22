@@ -386,7 +386,7 @@ class Automata:
         for state in self.states:
             state.terminal = not state.terminal
             if state.terminal:
-                self.terminal.append(state)
+                self.terminal.append(state.num)
         self.nb_final = len(self.terminal)
 
     def minimize(self):

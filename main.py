@@ -1,4 +1,5 @@
 from Automata import *
+import sys
 
 def print_menu():
     print("\n")
@@ -13,8 +14,8 @@ def print_menu():
           "║ 5: Test if deterministic                           ║\n"
           "║ 6: Test if complete                                ║\n"
           "║ 7: Test if standardized                            ║\n"
-          "║ 8: Recognize the word of the Automaton             ║\n"
-          "║ 9: Check if the Automaton recognise your input     ║\n"
+          "║ 8: Verify if the automaton recognizes your input   ║\n"
+          "║ 9: Verify the Automaton recognizes multiple inputs ║\n"
           "║ 10: Output the max Transitions from State 1        ║\n"
           "║ 11: Give the complementary of the Automaton        ║\n"
           "║ 12: Give the regular expression of the Automaton   ║\n"
@@ -24,6 +25,7 @@ def print_menu():
 
 def main():
     ex = Automata()
+
 
     while True:
 
