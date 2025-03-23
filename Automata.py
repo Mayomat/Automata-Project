@@ -236,7 +236,7 @@ class Automata:
             for i in range(self.nb_alphabet):
                 if len(state.transitions[i]) > 1:
                     # error message when ambiguity
-                    print(f" The automaton is not deterministic because the state {state.num} is ambiguous with the letter {i}")
+                    print(f" The automaton is not deterministic because the state {state.num} is ambiguous with the letter {alphabet[i]}")
                     return False
         print("The automaton is deterministic")
         return True
@@ -267,6 +267,8 @@ class Automata:
             dict_links[0] = set()
             for state in self.initial:
                 dict_links[0].add(state)
+                if self.states[state].terminal:
+                    initial_state.terminal = True
 
             # creation of a queue to control the creation and treatment of all the states :
             # if we create a new states for the automaton, we add it to the queue, it will then be treated later
@@ -401,6 +403,7 @@ class Automata:
         automaton = self.determine()  # we determine --> there are no non-accessible state
 
         automaton.complete()
+        automaton.display_automaton()
 
         # At first, we only have 2 groups : terminal and non-terminal
         groups = [[], []]
