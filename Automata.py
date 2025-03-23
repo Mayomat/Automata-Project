@@ -414,7 +414,7 @@ class Automata:
                 groups[1].append(state)
 
         # Display the partition of Terminal States and Non-Terminal States
-        print("Partition 1:")
+        print("Partition 0:")
         print("Group 1: Terminal States")
         for state in groups[0]:
             print(f" - State {state.num} (Terminal)")
