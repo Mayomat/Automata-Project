@@ -403,8 +403,6 @@ class Automata:
         automaton = self.determine()  # we determine --> there are no non-accessible state
 
         automaton.complete()
-        automaton.display_automaton()
-
         # At first, we only have 2 groups : terminal and non-terminal
         groups = [[], []]
         for state in automaton.states:
